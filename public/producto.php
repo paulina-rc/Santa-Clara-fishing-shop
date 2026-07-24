@@ -1,0 +1,112 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/helpers.php';
+
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$producto = null;
+
+if ($id !== null && $id !== false) {
+    $stmt = $mysqli->prepare(
+        'SELECT p.*, c.slug AS cat_slug, c.nombre AS cat_nombre
+         FROM productos p
+         JOIN categorias c ON p.categoria_id = c.id
+         WHERE p.id = ? AND p.activo = 1
+         LIMIT 1'
+    );
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $producto = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+}
+
+if (!$producto) {
+    http_response_code(404);
+    $pagina_activa = '';
+    $meta_titulo = 'Producto no encontrado · Tienda de Pesca Santa Clara';
+    $meta_descripcion = 'El producto que buscás no está disponible.';
+    require __DIR__ . '/includes/header.php';
+    ?>
+    <section class="seccion-listado">
+        <div class="contenedor">
+            <div class="estado-vacio">
+                <p>No encontramos este producto. Puede que ya no esté disponible.</p>
+                <p><a class="boton boton-ghost" href="productos.php">Ver todos los productos</a></p>
+            </div>
+        </div>
+    </section>
+    <?php
+    require __DIR__ . '/includes/footer.php';
+    exit;
+}
+
+$imagenSrc = producto_imagen_src($producto['imagen']);
+$precioFormateado = precio((float) $producto['precio']);
+
+$pagina_activa = $producto['cat_slug'];
+$meta_titulo = $producto['nombre'] . ' · Tienda de Pesca Santa Clara';
+$meta_descripcion = $producto['descripcion'] !== null && $producto['descripcion'] !== ''
+    ? recortar($producto['descripcion'], 155)
+    : 'Conocé ' . $producto['nombre'] . ' en Tienda de Pesca Santa Clara. Consultá disponibilidad y precio por WhatsApp.';
+$meta_imagen = $imagenSrc !== null ? rtrim(BASE_URL, '/') . '/' . $imagenSrc : '';
+
+$stmtRelacionados = $mysqli->prepare(
+    'SELECT * FROM productos WHERE activo = 1 AND categoria_id = ? AND id <> ? ORDER BY RAND() LIMIT 4'
+);
+$stmtRelacionados->bind_param('ii', $producto['categoria_id'], $producto['id']);
+$stmtRelacionados->execute();
+$relacionados = $stmtRelacionados->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmtRelacionados->close();
+
+require __DIR__ . '/includes/header.php';
+?>
+
+<p class="migaja contenedor">
+    <a href="index.php">Inicio</a> ›
+    <a href="productos.php?cat=<?= e($producto['cat_slug']) ?>"><?= e($producto['cat_nombre']) ?></a> ›
+    <?= e(recortar($producto['nombre'], 40)) ?>
+</p>
+
+<section class="detalle-producto contenedor">
+    <div class="detalle-foto">
+        <?php if ($imagenSrc !== null): ?>
+            <img src="<?= e($imagenSrc) ?>" alt="<?= e($producto['nombre']) ?>">
+        <?php else: ?>
+            <div class="tarjeta-producto-sin-foto" aria-hidden="true">Sin foto</div>
+        <?php endif; ?>
+    </div>
+
+    <div class="detalle-info">
+        <span class="detalle-marca mono"><?= e($producto['marca'] ?? '') ?></span>
+        <h1 class="detalle-nombre"><?= e($producto['nombre']) ?></h1>
+        <span class="detalle-precio"><?= $precioFormateado ?></span>
+
+        <?php if ($producto['descripcion'] !== null && $producto['descripcion'] !== ''): ?>
+            <div class="detalle-descripcion"><?= nl2br(e($producto['descripcion'])) ?></div>
+        <?php endif; ?>
+
+        <div class="detalle-botones">
+            <a class="boton boton-dorado" href="<?= e(url_whatsapp('Hola, me interesa el producto: ' . $producto['nombre'] . ' — ' . $precioFormateado . '. ¿Tienen disponible?')) ?>" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+            <a class="boton boton-ghost" href="productos.php?cat=<?= e($producto['cat_slug']) ?>">Ver más productos</a>
+        </div>
+    </div>
+</section>
+
+<?php if (!empty($relacionados)): ?>
+<section class="seccion-relacionados">
+    <div class="contenedor">
+        <div class="seccion-encabezado">
+            <h2>También te puede interesar</h2>
+        </div>
+        <div class="grid-productos">
+            <?php foreach ($relacionados as $item): ?>
+                <?= tarjeta_producto($item) ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<?php require __DIR__ . '/includes/footer.php'; ?>

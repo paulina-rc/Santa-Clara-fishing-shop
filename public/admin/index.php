@@ -24,6 +24,7 @@ $productosOcultos = (int) ($contadores['ocultos'] ?? 0);
 <meta charset="UTF-8">
 <title>Panel de administración — Tienda de Pesca Santa Clara</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body>

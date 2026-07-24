@@ -21,6 +21,10 @@ RewriteEngine On
 # --------------------------------------------------------------------------
 RewriteRule ^(config|includes|sql)(/|$) - [F,L]
 
+# Los partials del sitio publico (public/includes/*.php) no se sirven directo,
+# solo se cargan por require desde index.php / productos.php / producto.php.
+RewriteRule ^includes/ - [F,L]
+
 # Bloquear archivos ocultos (.env, .git, etc.)
 <FilesMatch "^\.">
     Require all denied

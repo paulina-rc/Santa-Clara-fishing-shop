@@ -16,19 +16,29 @@ tienda-pesca/
 ├── includes/
 │   ├── db.php                → conexión MySQLi
 │   ├── auth.php               → sesiones, login/logout, CSRF, requerir_login()
-│   └── helpers.php            → e(), precio(), url_whatsapp(), slugify(), flash
+│   └── helpers.php            → e(), precio(), url_whatsapp(), slugify(), flash,
+│                                 tarjeta_producto(), categoria_icono_svg(), recortar()
 ├── public/                    → DocumentRoot de Apache
 │   ├── .htaccess
-│   ├── index.php               → home (placeholder, diseño en Sprint 2)
+│   ├── index.php               → home pública: hero, categorías, destacados, contacto
+│   ├── productos.php           → listado de productos con filtro por categoría (?cat=slug)
+│   ├── producto.php            → ficha de producto (?id=X) con CTA de WhatsApp
+│   ├── includes/                → parciales del sitio público (bloqueados por .htaccess)
+│   │   ├── header.php            → promo bar + cabecera + nav dinámico + <head>/SEO
+│   │   └── footer.php            → footer + cierre de </body></html>
 │   ├── admin/
 │   │   ├── login.php
 │   │   ├── logout.php
 │   │   ├── index.php           → dashboard
 │   │   └── productos.php       → Sprint 3
 │   └── assets/
-│       ├── css/admin.css
+│       ├── css/
+│       │   ├── admin.css        → estilos del panel de administración
+│       │   └── publico.css      → estilos del catálogo público (paleta/tipografías aprobadas)
 │       ├── js/
-│       ├── img/
+│       │   ├── admin.js
+│       │   └── publico.js       → menú hamburguesa móvil
+│       ├── img/                 → hero.jpg/.jpeg/.png/.webp opcional (foto del hero, con fallback a gradiente)
 │       └── uploads/            → imágenes de productos (writable)
 ├── sql/
 │   ├── schema.sql
@@ -146,14 +156,50 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 Esto fuerza que todo el tráfico HTTP se redirija a HTTPS.
 
+## Catálogo público (Sprint 2)
+
+Todo el contenido público se lee de la base de datos, no hay nada quemado en
+el HTML.
+
+- **`index.php`** — home con promo bar, hero, grid de categorías (leídas de
+  `categorias WHERE activa=1 ORDER BY orden`), "Más vendidos" (`productos`
+  con `activo=1 AND destacado=1`, límite 8) y banda de contacto. Si la BD
+  está vacía, cada sección muestra un estado amable en vez de romperse.
+- **`productos.php`** — listado con chips de filtro por categoría
+  (`?cat=slug`). Si el slug no existe o está inactivo, muestra "categoría no
+  encontrada" con vuelta al inicio en lugar de fallar.
+- **`producto.php`** — ficha de producto (`?id=X`). Valida que el ID sea un
+  entero y que el producto exista y esté activo; si no, responde 404 con una
+  página amable. Incluye botón "Pedir por WhatsApp" con el mensaje
+  precargado (nombre + precio) y una sección de 4 productos relacionados de
+  la misma categoría.
+- **`public/includes/header.php` / `footer.php`** — parciales reutilizables.
+  Los puntos de entrada (`index.php`, `productos.php`, `producto.php`) hacen
+  `require` de `config.php`, `db.php` y `helpers.php` **antes** de incluir
+  estos parciales; los parciales no vuelven a requerirlos. `header.php`
+  arma el `<head>` (título, meta description, Open Graph) a partir de las
+  variables `$meta_titulo`, `$meta_descripcion` y `$meta_imagen` que cada
+  página define antes del `require`. Ambos archivos están bloqueados a
+  acceso HTTP directo vía `public/.htaccess`.
+- **Foto del hero** — opcional. Si existe `public/assets/img/hero.jpg` (o
+  `.jpeg`/`.png`/`.webp`), se muestra ahí; si no, el hero cae al degradado
+  marino/teal definido en CSS. Sustituí ese archivo cuando el cliente mande
+  la foto real.
+- **Tarjeta de producto** — un solo formato (`tarjeta_producto()` en
+  `includes/helpers.php`) reusado en la home, el listado y "también te
+  puede interesar", para que el diseño no se desincronice entre páginas.
+
 ## Roadmap
 
-- **Sprint 1 (este sprint):** base técnica — estructura de carpetas, conexión
+- **Sprint 1 (completo):** base técnica — estructura de carpetas, conexión
   a base de datos, esquema SQL, autenticación de admin con CSRF y sesiones
   seguras, dashboard con contadores, seguridad de servidor (.htaccess,
   cabeceras, protección de uploads).
-- **Sprint 2:** diseño público del catálogo (ya aprobado) — home, listado por
-  categoría, ficha de producto, integración de WhatsApp/Instagram.
+- **Sprint 2 (completo):** diseño público del catálogo — home (hero,
+  categorías, destacados, contacto), listado por categoría con filtros,
+  ficha de producto con CTA de WhatsApp y productos relacionados, header/
+  footer reutilizables, responsive móvil/tablet/desktop, SEO básico
+  (title, meta description, Open Graph).
 - **Sprint 3:** CRUD de productos en el admin (`productos.php`) — alta, edición,
   borrado, subida y recorte de imágenes, marcar destacado/activo.
 
