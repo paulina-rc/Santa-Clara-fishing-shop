@@ -1,4 +1,4 @@
-# Tienda de Pesca Santa Clara
+# Santa Clara Fishing Shop 
 
 Catalog site with private admin panel.
 **Stack:** PHP 8+, MySQL 8+, HTML, CSS, JavaScript.
