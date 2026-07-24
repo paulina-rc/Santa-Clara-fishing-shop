@@ -45,7 +45,7 @@ if (!$categoriaInvalida) {
 }
 
 $tituloListado = $categoriaActual['nombre'] ?? 'Todos los productos';
-$pagina_activa = $categoriaActual['slug'] ?? '';
+$pagina_activa = 'catalogo';
 
 if ($categoriaInvalida) {
     $meta_titulo = 'Categoría no encontrada · Tienda de Pesca Santa Clara';

@@ -736,6 +736,216 @@ h1, h2, h3 {
 }
 
 /* --------------------------------------------------------------------
+   Boton pequeno (variante compacta, usada en tarjetas de contacto)
+   -------------------------------------------------------------------- */
+.boton-pequeno {
+    padding: 9px 18px;
+    font-size: 13px;
+}
+
+/* --------------------------------------------------------------------
+   Pagina "Sobre nosotros" (nosotros.php)
+   -------------------------------------------------------------------- */
+.nosotros-historia {
+    background: var(--crema);
+    padding: 80px 48px;
+}
+
+.nosotros-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: start;
+}
+
+.nosotros-eyebrow {
+    color: var(--teal);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 0 0 16px;
+}
+
+.nosotros-titulo {
+    font-size: 48px;
+    line-height: 1.08;
+    color: var(--marino);
+    text-transform: uppercase;
+    margin: 0 0 24px;
+}
+
+.nosotros-parrafos p {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--carbon);
+    margin: 0 0 16px;
+}
+
+.nosotros-parrafos p:last-child {
+    margin-bottom: 0;
+}
+
+.nosotros-pilares {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+}
+
+.nosotros-pilar {
+    flex: 1;
+}
+
+.nosotros-pilar-icono {
+    display: inline-flex;
+    color: var(--teal);
+    margin-bottom: 10px;
+}
+
+.nosotros-pilar-titulo {
+    font-size: 15px;
+    color: var(--marino);
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.nosotros-pilar-texto {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--gris);
+    margin: 0;
+}
+
+.nosotros-foto-columna {
+    position: sticky;
+    top: 24px;
+}
+
+.nosotros-foto {
+    aspect-ratio: 4 / 5;
+    border-radius: 6px;
+    background: linear-gradient(155deg, var(--marino) 0%, var(--teal) 100%);
+}
+
+.nosotros-foto-caption {
+    font-size: 11px;
+    color: var(--gris);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin: 10px 0 0;
+}
+
+/* --------------------------------------------------------------------
+   Seccion contacto (nosotros.php#contacto)
+   -------------------------------------------------------------------- */
+.nosotros-contacto {
+    background: var(--marino);
+    padding: 80px 48px;
+}
+
+.nosotros-contacto-contenido {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.nosotros-contacto-header {
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto 48px;
+}
+
+.nosotros-contacto-eyebrow {
+    color: var(--dorado);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 0 0 16px;
+}
+
+.nosotros-contacto-titulo {
+    font-size: 40px;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0 0 16px;
+}
+
+.nosotros-contacto-subtitulo {
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #C9D2D6;
+    margin: 0;
+}
+
+.grid-contacto {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.tarjeta-contacto {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 28px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s ease;
+}
+
+.tarjeta-contacto:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.tarjeta-contacto-icono {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(30, 122, 110, 0.15);
+    color: var(--teal-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.tarjeta-contacto-etiqueta {
+    font-size: 11px;
+    color: #C9D2D6;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 8px;
+}
+
+.tarjeta-contacto-dato {
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 20px;
+    word-break: break-word;
+}
+
+.tarjeta-contacto .boton {
+    margin-top: auto;
+}
+
+.nosotros-horario {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    color: #C9D2D6;
+    text-align: center;
+    margin: 40px 0 0;
+}
+
+/* --------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------- */
 @media (max-width: 1023px) {
@@ -875,6 +1085,42 @@ h1, h2, h3 {
     .detalle-producto {
         grid-template-columns: 1fr;
         gap: 24px;
+    }
+
+    .nosotros-historia {
+        padding: 48px 24px;
+    }
+
+    .nosotros-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .nosotros-foto-columna {
+        position: static;
+        order: -1;
+    }
+
+    .nosotros-titulo {
+        font-size: 32px;
+    }
+
+    .nosotros-pilares {
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 32px;
+    }
+
+    .nosotros-contacto {
+        padding: 56px 24px;
+    }
+
+    .nosotros-contacto-titulo {
+        font-size: 28px;
+    }
+
+    .grid-contacto {
+        grid-template-columns: 1fr;
     }
 }
 

@@ -24,7 +24,7 @@ if ($id !== null && $id !== false) {
 
 if (!$producto) {
     http_response_code(404);
-    $pagina_activa = '';
+    $pagina_activa = 'catalogo';
     $meta_titulo = 'Producto no encontrado · Tienda de Pesca Santa Clara';
     $meta_descripcion = 'El producto que buscás no está disponible.';
     require __DIR__ . '/includes/header.php';
@@ -45,7 +45,7 @@ if (!$producto) {
 $imagenSrc = producto_imagen_src($producto['imagen']);
 $precioFormateado = precio((float) $producto['precio']);
 
-$pagina_activa = $producto['cat_slug'];
+$pagina_activa = 'catalogo';
 $meta_titulo = $producto['nombre'] . ' · Tienda de Pesca Santa Clara';
 $meta_descripcion = $producto['descripcion'] !== null && $producto['descripcion'] !== ''
     ? recortar($producto['descripcion'], 155)

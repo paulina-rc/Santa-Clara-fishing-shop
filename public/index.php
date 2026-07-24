@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/helpers.php';
 
-$pagina_activa = 'inicio';
+$pagina_activa = 'home';
 $meta_titulo = 'Tienda de Pesca Santa Clara · Cañas, carretes y señuelos en Costa Rica';
 $meta_descripcion = 'Catálogo de equipo de pesca en Santa Clara, San Carlos: cañas, carretes, señuelos, ropa y accesorios. Consultá disponibilidad por WhatsApp.';
 

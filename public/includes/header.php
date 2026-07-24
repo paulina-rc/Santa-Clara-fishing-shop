@@ -10,6 +10,8 @@ $pagina_activa = $pagina_activa ?? '';
 $meta_titulo = $meta_titulo ?? 'Tienda de Pesca Santa Clara';
 $meta_descripcion = $meta_descripcion ?? 'Cañas, carretes, señuelos, ropa y accesorios de pesca en Santa Clara, San Carlos, Costa Rica.';
 $meta_imagen = $meta_imagen ?? '';
+$queryActual = $_SERVER['QUERY_STRING'] ?? '';
+$meta_url = $meta_url ?? rtrim(BASE_URL, '/') . '/' . basename($_SERVER['SCRIPT_NAME']) . ($queryActual !== '' ? '?' . $queryActual : '');
 
 $categoriasNav = [];
 $resultadoNav = $mysqli->query('SELECT slug, nombre FROM categorias WHERE activa = 1 ORDER BY orden');
@@ -27,6 +29,7 @@ if ($resultadoNav) {
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?= e($meta_titulo) ?>">
 <meta property="og:description" content="<?= e($meta_descripcion) ?>">
+<meta property="og:url" content="<?= e($meta_url) ?>">
 <?php if ($meta_imagen !== ''): ?>
 <meta property="og:image" content="<?= e($meta_imagen) ?>">
 <?php endif; ?>
@@ -54,11 +57,11 @@ if ($resultadoNav) {
         </span>
     </a>
 
+    <?php $nosotrosActivo = in_array($pagina_activa, ['nosotros', 'contacto'], true); ?>
     <nav class="cabecera-nav" id="navPrincipal">
-        <?php foreach ($categoriasNav as $cat): ?>
-            <a href="productos.php?cat=<?= e($cat['slug']) ?>" class="<?= $pagina_activa === $cat['slug'] ? 'activo' : '' ?>"><?= e($cat['nombre']) ?></a>
-        <?php endforeach; ?>
-        <a href="index.php#contacto" class="<?= $pagina_activa === 'contacto' ? 'activo' : '' ?>">Contacto</a>
+        <a href="productos.php" class="<?= $pagina_activa === 'catalogo' ? 'activo' : '' ?>">Catálogo</a>
+        <a href="nosotros.php" class="<?= $nosotrosActivo ? 'activo' : '' ?>">Sobre nosotros</a>
+        <a href="nosotros.php#contacto">Contacto</a>
     </nav>
 
     <div class="cabecera-acciones">
