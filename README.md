@@ -1,166 +1,123 @@
 # Tienda de Pesca Santa Clara
 
-Sitio catálogo (sin carrito de compras) con panel de administración privado. El
-dueño del negocio sube productos, fotos, descripciones y precios desde
-`/admin`. El público solo navega el catálogo.
+Catalog site with private admin panel.
+**Stack:** PHP 8+, MySQL 8+, HTML, CSS, JavaScript.
+**Architecture:** Structured vanilla PHP (no framework), object-oriented MySQLi.
 
-Stack: PHP 8+ puro (sin framework), MySQL 8+ / MySQLi orientado a objetos,
-HTML/CSS/JS vanilla. Despliegue en VPS privado con Apache.
+The public-facing site is in Spanish — this README documents the codebase for developers.
 
-## Estructura del proyecto
+---
+
+## Project structure
 
 ```
 tienda-pesca/
 ├── config/
-│   └── config.example.php   → plantilla de configuración (copiar a config.php)
+│ ├── config.example.php → copy to config.php on the server
+│ └── config.php → NOT committed (credentials)
 ├── includes/
-│   ├── db.php                → conexión MySQLi
-│   ├── auth.php               → sesiones, login/logout, CSRF, requerir_login()
-│   └── helpers.php            → e(), precio(), url_whatsapp(), slugify(), flash
-├── public/                    → DocumentRoot de Apache
-│   ├── .htaccess
-│   ├── index.php               → home (placeholder, diseño en Sprint 2)
-│   ├── admin/
-│   │   ├── login.php
-│   │   ├── logout.php
-│   │   ├── index.php           → dashboard
-│   │   └── productos.php       → Sprint 3
-│   └── assets/
-│       ├── css/admin.css
-│       ├── js/
-│       ├── img/
-│       └── uploads/            → imágenes de productos (writable)
-├── sql/
-│   ├── schema.sql
-│   └── crear_admin.php        → script de un solo uso
-├── .gitignore
-└── README.md
+│ ├── db.php → MySQLi connection
+│ ├── auth.php → login, sessions, CSRF
+│ └── helpers.php → utilities (escape, price, WhatsApp, slug)
+├── public/ → VPS DocumentRoot points here
+│ ├── .htaccess → security and cache rules
+│ ├── index.php → homepage
+│ ├── productos.php → listing with category filter
+│ ├── producto.php → product detail
+│ ├── includes/ → public-site partials
+│ │ ├── header.php
+│ │ └── footer.php
+│ ├── admin/ → private panel
+│ │ ├── login.php
+│ │ ├── logout.php
+│ │ ├── index.php → dashboard
+│ │ └── productos.php → CRUD (Sprint 3)
+│ └── assets/
+│ ├── css/
+│ ├── js/
+│ ├── img/
+│ └── uploads/ → product images (writable)
+└── sql/
+├── schema.sql → DB structure
+└── crear_admin.php → run ONCE, then DELETE
 ```
 
-## Base de datos
+Only the `public/` folder is HTTP-accessible.
+`config/`, `includes/`, and `sql/` live one directory up.
 
-### 1. Crear base de datos y usuario MySQL
+---
+
+## Deployment on VPS
+
+### 1. Create the database
 
 ```sql
 CREATE DATABASE tienda_pesca CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'tienda_pesca_user'@'localhost' IDENTIFIED BY 'una-contraseña-segura';
-GRANT ALL PRIVILEGES ON tienda_pesca.* TO 'tienda_pesca_user'@'localhost';
+CREATE USER 'tp_user'@'localhost' IDENTIFIED BY 'a-strong-password';
+GRANT ALL PRIVILEGES ON tienda_pesca.* TO 'tp_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-### 2. Cargar el esquema
-
+Then load the schema:
 ```bash
-mysql -u tienda_pesca_user -p tienda_pesca < sql/schema.sql
+mysql -u tp_user -p tienda_pesca < sql/schema.sql
 ```
 
-Esto crea las tablas `categorias` (con las 6 categorías iniciales),
-`productos` y `admins`.
-
-## Configuración
+### 2. Configure
 
 ```bash
 cp config/config.example.php config/config.php
+# edit config/config.php with real credentials
 ```
 
-Edita `config/config.php` con los datos reales: `BASE_URL`, credenciales de
-`DB_*`, número de WhatsApp, redes sociales, etc. **Este archivo no se sube al
-repositorio** (está en `.gitignore`) porque contiene credenciales.
-
-## Permisos de la carpeta uploads
-
-En el VPS, el usuario del servidor web (normalmente `www-data`) debe poder
-escribir en `public/assets/uploads/`:
+### 3. Uploads permissions
 
 ```bash
-sudo chown -R www-data:www-data public/assets/uploads
-sudo chmod -R 775 public/assets/uploads
+chown -R www-data:www-data public/assets/uploads
+chmod 775 public/assets/uploads
 ```
 
-Esa carpeta tiene su propio `.htaccess` que deshabilita la ejecución de PHP,
-así que aunque sea escribible, no se pueden ejecutar scripts subidos ahí.
+### 4. Create initial admin
 
-## Crear el administrador inicial
-
-1. Abre `sql/crear_admin.php` y cambia `$usuario`, `$password` (mínimo 8
-   caracteres, distinta del placeholder) y `$nombre`.
-2. Ejecuta desde el servidor:
-
-   ```bash
-   php sql/crear_admin.php
-   ```
-
-3. **Borra el archivo inmediatamente después de usarlo**:
-
-   ```bash
-   rm sql/crear_admin.php
-   ```
-
-   El script se niega a correr si no cambiaste la contraseña placeholder, y
-   al finalizar imprime un recordatorio de borrarlo.
-
-## Configuración de Apache
-
-Módulos requeridos:
-
+Edit `sql/crear_admin.php` and set the owner's temporary username/password, then:
 ```bash
-sudo a2enmod rewrite headers expires
-sudo systemctl restart apache2
+php sql/crear_admin.php
 ```
 
-Ejemplo de VirtualHost (ajusta dominio y rutas):
-
-```apache
-<VirtualHost *:80>
-    ServerName tiendapescasantaclara.com
-    DocumentRoot /var/www/tienda-pesca/public
-
-    <Directory /var/www/tienda-pesca/public>
-        AllowOverride All
-        Require all granted
-    </Directory>
-
-    ErrorLog ${APACHE_LOG_DIR}/tienda-pesca-error.log
-    CustomLog ${APACHE_LOG_DIR}/tienda-pesca-access.log combined
-</VirtualHost>
-```
-
-`AllowOverride All` es necesario para que `public/.htaccess` y
-`public/assets/uploads/.htaccess` funcionen.
-
-## SSL con Certbot
-
+**DELETE the file afterwards:**
 ```bash
-sudo apt install certbot python3-certbot-apache
-sudo certbot --apache -d tiendapescasantaclara.com -d www.tiendapescasantaclara.com
+rm sql/crear_admin.php
 ```
 
-Certbot ajusta el VirtualHost automáticamente para servir HTTPS. Una vez
-verificado que el sitio carga por HTTPS, **descomenta el bloque de
-redirección** al inicio de `public/.htaccess`:
+### 5. Apache
 
-```apache
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-```
+DocumentRoot must point to `.../tienda-pesca/public`.
+Required modules: `mod_rewrite`, `mod_headers`, `mod_expires`.
 
-Esto fuerza que todo el tráfico HTTP se redirija a HTTPS.
+### 6. HTTPS
 
-## Roadmap
-
-- **Sprint 1 (este sprint):** base técnica — estructura de carpetas, conexión
-  a base de datos, esquema SQL, autenticación de admin con CSRF y sesiones
-  seguras, dashboard con contadores, seguridad de servidor (.htaccess,
-  cabeceras, protección de uploads).
-- **Sprint 2:** diseño público del catálogo (ya aprobado) — home, listado por
-  categoría, ficha de producto, integración de WhatsApp/Instagram.
-- **Sprint 3:** CRUD de productos en el admin (`productos.php`) — alta, edición,
-  borrado, subida y recorte de imágenes, marcar destacado/activo.
-
-## Validación
-
-Todos los archivos PHP deben pasar sin errores de sintaxis:
-
+Install Let's Encrypt via Certbot:
 ```bash
-find . -name "*.php" -print0 | xargs -0 -n1 php -l
+sudo certbot --apache -d tiendadepescasantaclara.com -d www.tiendadepescasantaclara.com
 ```
+
+After confirming HTTPS works, uncomment the redirect block in `public/.htaccess`.
+
+---
+
+## Sprints
+
+- **Sprint 1**  — Technical base: structure, DB, admin login, dashboard
+- **Sprint 2**  — Public catalog (home, category filters, product detail, responsive)
+- **Sprint 3** — Products CRUD in admin panel + deployment + initial content load
+
+---
+
+## Security notes
+
+- Passwords: `password_hash()` + `password_verify()` (bcrypt)
+- CSRF token on every admin form
+- Session with `httponly`, `secure`, `samesite=Lax`, regenerated on login
+- Uploads: extension and size validated, PHP disabled in the folder via `.htaccess`
+- Prepared statements on all queries
+- All output escaped via `e()`
