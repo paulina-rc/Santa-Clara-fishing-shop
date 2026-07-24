@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Tienda de Pesca Santa Clara</h1>
     <p class="subtitulo">Panel de administración</p>
 
+    <?= flash_render() ?>
+
     <?php if ($error !== ''): ?>
         <div class="alerta alerta-error"><?= e($error) ?></div>
     <?php endif; ?>

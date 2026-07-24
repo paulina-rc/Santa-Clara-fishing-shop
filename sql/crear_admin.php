@@ -11,8 +11,8 @@ declare(strict_types=1);
  */
 
 $usuario  = 'admin';
-$password = 'CAMBIAR_ESTA_CONTRASENA';
-$nombre   = 'Administrador';
+$password = '12345678';
+$nombre   = 'Paulina';
 
 if ($password === 'CAMBIAR_ESTA_CONTRASENA') {
     fwrite(STDERR, "Edita este archivo y cambia la variable \$password antes de ejecutarlo.\n");

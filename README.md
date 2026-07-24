@@ -13,35 +13,49 @@ The public-facing site is in Spanish — this README documents the codebase for 
 ```
 tienda-pesca/
 ├── config/
-│ ├── config.example.php → copy to config.php on the server
-│ └── config.php → NOT committed (credentials)
+│   ├── config.example.php     → copy to config.php on the server
+│   └── config.php             → NOT committed (credentials)
 ├── includes/
-│   ├── db.php                → conexión MySQLi
-│   ├── auth.php               → sesiones, login/logout, CSRF, requerir_login()
-│   └── helpers.php            → e(), precio(), url_whatsapp(), slugify(), flash
+│   ├── db.php                 → conexión MySQLi
+│   ├── auth.php                → sesiones, login/logout, CSRF, requerir_login()
+│   ├── helpers.php             → e(), precio(), url_whatsapp(), slugify(), flash
+│   └── productos_helpers.php   → validar_imagen(), guardar_imagen(), borrar_imagen()
 ├── public/                    → DocumentRoot de Apache
 │   ├── .htaccess
-│   ├── index.php               → home (placeholder, diseño en Sprint 2)
+│   ├── index.php               → home pública (destacados)
+│   ├── productos.php           → listado público por categoría
+│   ├── producto.php            → ficha pública de producto
+│   ├── includes/
+│   │   ├── header.php          → partial: nav pública, meta tags
+│   │   └── footer.php          → partial: footer, WhatsApp/Instagram
 │   ├── admin/
 │   │   ├── login.php
 │   │   ├── logout.php
-│   │   ├── index.php           → dashboard
-│   │   └── productos.php       → Sprint 3
+│   │   ├── index.php            → dashboard con contadores
+│   │   ├── cuenta.php            → cambio de contraseña del admin
+│   │   ├── productos.php        → listado admin (filtros, acciones rápidas)
+│   │   ├── producto_nuevo.php   → formulario de alta
+│   │   ├── producto_editar.php  → formulario de edición (?id=)
+│   │   ├── producto_eliminar.php → endpoint POST, borra producto + imagen
+│   │   └── producto_toggle.php  → endpoint POST, toggle activo/destacado
 │   └── assets/
-│       ├── css/admin.css
+│       ├── css/
+│       │   ├── admin.css       → estilos del panel admin
+│       │   └── publico.css     → estilos del sitio público
 │       ├── js/
 │       ├── img/
-│       └── uploads/            → imágenes de productos (writable)
+│       └── uploads/            → imágenes de productos (writable, sin PHP)
 ├── sql/
 │   ├── schema.sql
 │   └── crear_admin.php        → script de un solo uso
 ├── .gitignore
+├── DEPLOY.md                  → guía de despliegue en VPS (Apache, MySQL, SSL)
 └── README.md
 ```
 
-## Base de datos
+## Desarrollo local — inicio rápido
 
-### 1. Crear base de datos y usuario MySQL
+### 1. Crear base de datos y cargar el esquema
 
 ```sql
 CREATE DATABASE tienda_pesca CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -50,70 +64,55 @@ GRANT ALL PRIVILEGES ON tienda_pesca.* TO 'tp_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-Then load the schema:
 ```bash
 mysql -u tp_user -p tienda_pesca < sql/schema.sql
 ```
 
-### 2. Configure
+### 2. Configurar
 
 ```bash
 cp config/config.example.php config/config.php
-# edit config/config.php with real credentials
+# editar config/config.php con las credenciales locales y BASE_URL
 ```
 
-### 3. Uploads permissions
+### 3. Permisos de uploads
 
 ```bash
-chown -R www-data:www-data public/assets/uploads
 chmod 775 public/assets/uploads
 ```
 
-### 4. Create initial admin
+### 4. Crear el admin inicial
 
-Edit `sql/crear_admin.php` and set the owner's temporary username/password, then:
+Edita `sql/crear_admin.php` con el usuario/contraseña deseados, ejecútalo y
+bórralo:
+
 ```bash
 php sql/crear_admin.php
-```
-
-**DELETE the file afterwards:**
-```bash
 rm sql/crear_admin.php
 ```
 
-### 5. Apache
+### 5. Servidor
 
-DocumentRoot must point to `.../tienda-pesca/public`.
-Required modules: `mod_rewrite`, `mod_headers`, `mod_expires`.
+Apunta el DocumentRoot de Apache (o el servidor embebido de PHP) a
+`public/`. Módulos requeridos: `mod_rewrite`, `mod_headers`, `mod_expires`.
 
-### 6. HTTPS
-
-Install Let's Encrypt via Certbot:
-```bash
-sudo certbot --apache -d tiendadepescasantaclara.com -d www.tiendadepescasantaclara.com
-```
-
-Certbot ajusta el VirtualHost automáticamente para servir HTTPS. Una vez
-verificado que el sitio carga por HTTPS, **descomenta el bloque de
-redirección** al inicio de `public/.htaccess`:
-
-```apache
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-```
-
-Esto fuerza que todo el tráfico HTTP se redirija a HTTPS.
+Para desplegar en un VPS de producción (VirtualHost completo, MySQL con
+usuario de permisos mínimos, permisos de archivos, HTTPS con Certbot,
+checklist post-despliegue), ver **[DEPLOY.md](DEPLOY.md)**.
 
 ## Roadmap
 
-- **Sprint 1 (este sprint):** base técnica — estructura de carpetas, conexión
-  a base de datos, esquema SQL, autenticación de admin con CSRF y sesiones
-  seguras, dashboard con contadores, seguridad de servidor (.htaccess,
-  cabeceras, protección de uploads).
-- **Sprint 2:** diseño público del catálogo (ya aprobado) — home, listado por
-  categoría, ficha de producto, integración de WhatsApp/Instagram.
-- **Sprint 3:** CRUD de productos en el admin (`productos.php`) — alta, edición,
-  borrado, subida y recorte de imágenes, marcar destacado/activo.
+- **Sprint 1:** base técnica — estructura de carpetas, conexión a base de
+  datos, esquema SQL, autenticación de admin con CSRF y sesiones seguras,
+  dashboard con contadores, seguridad de servidor (.htaccess, cabeceras,
+  protección de uploads).
+- **Sprint 2:** diseño público del catálogo — home, listado por categoría,
+  ficha de producto, integración de WhatsApp/Instagram.
+- **Sprint 3 (este sprint):** CRUD de productos en el admin — listado con
+  filtros y paginación, alta y edición con subida/validación de imágenes
+  (MIME real, no extensión declarada), toggle rápido de activo/destacado,
+  eliminación con confirmación, cambio de contraseña del admin, y guía de
+  despliegue (`DEPLOY.md`).
 
 ## Validación
 

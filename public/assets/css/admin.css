@@ -198,6 +198,326 @@ a {
     text-align: center;
 }
 
+/* Sprint 3: listado y CRUD de productos */
+.contenido-admin-ancho {
+    max-width: 1200px;
+}
+
+.encabezado-seccion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.encabezado-seccion h2 {
+    margin: 0;
+    color: var(--marino);
+}
+
+.boton-dorado {
+    background: var(--dorado);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+}
+
+.boton-dorado:hover {
+    background: #ad8228;
+}
+
+.boton-secundario {
+    background: #fff;
+    color: var(--texto);
+    border: 1px solid var(--gris-borde);
+}
+
+.boton-secundario:hover {
+    background: var(--crema);
+}
+
+/* Filtros */
+.filtros-productos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.campo-filtro label {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.campo-filtro input,
+.campo-filtro select {
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.campo-filtro-acciones {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Tabla de productos */
+.tabla-productos-contenedor {
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+}
+
+.tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 780px;
+}
+
+.tabla-productos th,
+.tabla-productos td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gris-borde);
+    vertical-align: middle;
+}
+
+.tabla-productos th {
+    background: var(--crema);
+    font-size: 0.85rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.tabla-productos tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.miniatura-producto {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+}
+
+.miniatura-placeholder {
+    background: var(--crema);
+    border: 1px dashed var(--gris-borde);
+    color: #999;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.celda-nombre {
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.celda-marca {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-categoria {
+    background: var(--crema);
+    color: var(--marino);
+    border: 1px solid var(--gris-borde);
+}
+
+.badge-activo {
+    background: #E7F3EC;
+    color: var(--verde);
+    border: 1px solid #B9DCC4;
+}
+
+.badge-oculto {
+    background: #FBEAEA;
+    color: var(--rojo);
+    border: 1px solid #E9B6B3;
+}
+
+.badge-destacado {
+    background: #FBF1DC;
+    color: #8a6a1f;
+    border: 1px solid #EAD8A6;
+    margin-left: 0.3rem;
+}
+
+/* Acciones de fila */
+.acciones-fila {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.form-inline {
+    display: inline-block;
+    margin: 0;
+}
+
+.boton-mini {
+    display: inline-block;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid var(--gris-borde);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--texto);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.boton-mini:hover {
+    background: var(--crema);
+}
+
+.boton-mini-peligro {
+    color: var(--rojo);
+    border-color: #E9B6B3;
+}
+
+.boton-mini-peligro:hover {
+    background: #FBEAEA;
+}
+
+.sin-resultados {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #777;
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+}
+
+/* Paginacion */
+.paginacion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+}
+
+.paginacion a {
+    font-weight: 600;
+}
+
+.paginacion-info {
+    color: #666;
+}
+
+/* Formulario de producto / cuenta */
+.formulario-producto {
+    display: flex;
+    flex-direction: column;
+    max-width: 560px;
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.formulario-angosto {
+    max-width: 400px;
+}
+
+.formulario-producto label {
+    font-size: 0.85rem;
+    margin: 0.75rem 0 0.3rem;
+    color: #444;
+}
+
+.formulario-producto label:first-of-type {
+    margin-top: 0;
+}
+
+.formulario-producto input[type="text"],
+.formulario-producto input[type="number"],
+.formulario-producto input[type="password"],
+.formulario-producto input[type="file"],
+.formulario-producto select,
+.formulario-producto textarea {
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.formulario-producto textarea {
+    resize: vertical;
+}
+
+.campo-checkbox {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem !important;
+    color: var(--texto) !important;
+}
+
+.nota-campo {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.preview-imagen,
+.imagen-actual {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--gris-borde);
+    margin-top: 0.5rem;
+}
+
+.acciones-formulario {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.alerta ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
     .tarjetas-contadores {
@@ -212,5 +532,18 @@ a {
     .tarjeta-login {
         padding: 1.5rem;
         margin: 1rem;
+    }
+
+    .filtros-productos {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campo-filtro-acciones {
+        flex-direction: row;
+    }
+
+    .formulario-producto {
+        padding: 1.25rem;
     }
 }

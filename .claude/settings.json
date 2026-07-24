@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"/c/xampp/mysql/bin/mysql.exe\" -u root -e \"USE fishingshop; SELECT id, nombre, marca, categoria_id, precio, imagen, destacado, activo FROM productos;\")",
+      "Bash(curl -s -b /tmp/cookies_tps.txt -c /tmp/cookies_tps.txt http://localhost/tiendapesca/public/admin/productos.php -o /tmp/productos2.html -w '%{http_code}\\\\n')",
+      "Read(//tmp/**)"
+    ]
+  }
+}
