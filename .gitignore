@@ -1,0 +1,16 @@
+# Configuracion local (contiene credenciales)
+/config/config.php
+
+# Imagenes subidas por el admin (no versionar contenido de usuarios)
+/public/assets/uploads/*
+!/public/assets/uploads/.gitkeep
+!/public/assets/uploads/.htaccess
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log

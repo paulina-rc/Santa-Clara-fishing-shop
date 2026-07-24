@@ -1,0 +1,41 @@
+# Tienda de Pesca Santa Clara — public/.htaccess
+
+# No listar directorios
+Options -Indexes -MultiViews
+
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# --------------------------------------------------------------------------
+# Redireccion forzada a HTTPS
+# Descomentar UNICAMENTE despues de haber emitido el certificado con Certbot.
+# --------------------------------------------------------------------------
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --------------------------------------------------------------------------
+# Defensa en profundidad: bloquear acceso HTTP directo a carpetas sensibles
+# (normalmente ni siquiera son accesibles porque DocumentRoot apunta a public/,
+# pero se bloquean por si el proyecto se sirve desde la raiz por error).
+# --------------------------------------------------------------------------
+RewriteRule ^(config|includes|sql)(/|$) - [F,L]
+
+# Bloquear archivos ocultos (.env, .git, etc.)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Bloquear extensiones que nunca deben servirse directamente
+<FilesMatch "\.(sql|log|md|env|ini)$">
+    Require all denied
+</FilesMatch>
+
+# --------------------------------------------------------------------------
+# Cabeceras de seguridad
+# --------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

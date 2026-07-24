@@ -1,0 +1,216 @@
+:root {
+    --marino: #10283E;
+    --teal: #1E7A6E;
+    --dorado: #C79A34;
+    --crema: #F8F5EE;
+    --gris-borde: #D8D3C7;
+    --texto: #1F2937;
+    --rojo: #B3261E;
+    --verde: #1E7A45;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--crema);
+    color: var(--texto);
+}
+
+a {
+    color: var(--teal);
+}
+
+/* Cabecera */
+.cabecera-admin {
+    background: var(--marino);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.cabecera-admin h1 {
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.nav-admin {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nav-admin a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.nav-admin a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Contenido */
+.contenido-admin {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.saludo {
+    font-size: 1.05rem;
+}
+
+/* Tarjetas de contadores */
+.tarjetas-contadores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tarjeta {
+    background: #fff;
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.tarjeta-numero {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--marino);
+}
+
+.tarjeta-etiqueta {
+    display: block;
+    margin-top: 0.25rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Botones */
+.boton {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.boton-primario {
+    background: var(--teal);
+    color: #fff;
+}
+
+.boton-primario:hover {
+    background: #17635a;
+}
+
+/* Alertas */
+.alerta {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.alerta-error {
+    background: #FBEAEA;
+    color: var(--rojo);
+    border: 1px solid #E9B6B3;
+}
+
+.alerta-exito {
+    background: #E7F3EC;
+    color: var(--verde);
+    border: 1px solid #B9DCC4;
+}
+
+/* Login */
+.pagina-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--marino);
+}
+
+.tarjeta-login {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.tarjeta-login h1 {
+    font-size: 1.2rem;
+    color: var(--marino);
+    margin: 0 0 0.25rem;
+    text-align: center;
+}
+
+.subtitulo {
+    text-align: center;
+    color: var(--dorado);
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tarjeta-login form {
+    display: flex;
+    flex-direction: column;
+}
+
+.tarjeta-login label {
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0.25rem;
+    color: #444;
+}
+
+.tarjeta-login input {
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--gris-borde);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.tarjeta-login .boton {
+    margin-top: 1.25rem;
+    width: 100%;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .tarjetas-contadores {
+        grid-template-columns: 1fr;
+    }
+
+    .cabecera-admin {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tarjeta-login {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+}
