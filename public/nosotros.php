@@ -52,52 +52,72 @@ require __DIR__ . '/includes/header.php';
         </div>
 
         <div class="nosotros-foto-columna">
-            <!-- TODO: Reemplazar con foto real que envíe el cliente -->
-            <div class="nosotros-foto" aria-hidden="true"></div>
-            <p class="nosotros-foto-caption mono">[ foto del interior de la tienda o del equipo ]</p>
+            <div class="nosotros-foto" aria-hidden="true">
+                <!-- TODO: Reemplazar con foto real que envíe el cliente -->
+                <p class="nosotros-foto-caption mono">[ foto del interior de la tienda o del equipo ]</p>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="nosotros-contacto" id="contacto">
-    <div class="nosotros-contacto-contenido">
-        <div class="nosotros-contacto-header">
-            <p class="nosotros-contacto-eyebrow mono">Contáctanos</p>
-            <h2 class="nosotros-contacto-titulo">Escríbenos, te respondemos rápido</h2>
-            <p class="nosotros-contacto-subtitulo">Estamos para ayudarte a encontrar el equipo de pesca ideal, resolver dudas o coordinar tu compra.</p>
+<section class="contacto" id="contacto">
+    <div class="contacto-header">
+        <p class="nosotros-eyebrow mono">Contáctanos</p>
+    </div>
+
+    <div class="contacto-grid">
+        <div class="contacto-stack">
+            <a class="tarjeta-contacto tarjeta-whatsapp" href="<?= e(url_whatsapp('Hola, quisiera más información.')) ?>" target="_blank" rel="noopener">
+                <span class="tarjeta-contacto-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H9.5L5.5 20v-3.5H4v-11Z"/></svg>
+                </span>
+                <span class="tarjeta-contacto-texto">
+                    <span class="tarjeta-contacto-label mono">WhatsApp</span>
+                    <span class="tarjeta-contacto-dato"><?= e(WHATSAPP_DISPLAY) ?></span>
+                </span>
+            </a>
+
+            <div class="tarjeta-contacto tarjeta-info tarjeta-ubicacion">
+                <span class="tarjeta-contacto-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+                </span>
+                <span class="tarjeta-contacto-texto">
+                    <span class="tarjeta-contacto-label mono">Ubicación</span>
+                    <span class="tarjeta-contacto-linea1">Santa Clara, San Carlos</span>
+                    <span class="tarjeta-contacto-linea2">Alajuela, Costa Rica · Retiro en tienda</span>
+                </span>
+            </div>
+
+            <!-- TODO: Confirmar horario con cliente -->
+            <div class="tarjeta-contacto tarjeta-info tarjeta-horario">
+                <span class="tarjeta-contacto-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 1.8"/></svg>
+                </span>
+                <span class="tarjeta-contacto-texto">
+                    <span class="tarjeta-contacto-label mono">Horario</span>
+                    <span class="tarjeta-contacto-linea1">Lun a Sáb · 8:00 a.m. – 6:00 p.m.</span>
+                    <span class="tarjeta-contacto-linea2">Domingo · 8:00 a.m. – 12:00 m.d.</span>
+                </span>
+            </div>
+
+            <a class="tarjeta-contacto tarjeta-info tarjeta-instagram" href="https://instagram.com/<?= e(INSTAGRAM_USUARIO) ?>" target="_blank" rel="noopener">
+                <span class="tarjeta-contacto-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+                </span>
+                <span class="tarjeta-contacto-texto">
+                    <span class="tarjeta-contacto-label mono">Instagram</span>
+                    <span class="tarjeta-contacto-handle">@<?= e(INSTAGRAM_USUARIO) ?></span>
+                </span>
+            </a>
         </div>
 
-        <div class="grid-contacto">
-            <div class="tarjeta-contacto">
-                <span class="tarjeta-contacto-icono" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.1 8.1 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8.9-.2.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
-                </span>
-                <p class="tarjeta-contacto-etiqueta mono">WhatsApp</p>
-                <p class="tarjeta-contacto-dato"><?= e(WHATSAPP_DISPLAY) ?></p>
-                <a class="boton boton-dorado boton-pequeno" href="<?= e(url_whatsapp('Hola, quisiera más información.')) ?>" target="_blank" rel="noopener">Escribir</a>
-            </div>
-
-            <div class="tarjeta-contacto">
-                <span class="tarjeta-contacto-icono" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
-                </span>
-                <p class="tarjeta-contacto-etiqueta mono">Instagram</p>
-                <p class="tarjeta-contacto-dato">@<?= e(INSTAGRAM_USUARIO) ?></p>
-                <a class="boton boton-ghost-claro boton-pequeno" href="https://instagram.com/<?= e(INSTAGRAM_USUARIO) ?>" target="_blank" rel="noopener">Ver perfil</a>
-            </div>
-
-            <div class="tarjeta-contacto">
-                <span class="tarjeta-contacto-icono" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
-                </span>
-                <p class="tarjeta-contacto-etiqueta mono">Estamos en</p>
-                <p class="tarjeta-contacto-dato"><?= e(DIRECCION) ?></p>
-                <a class="boton boton-ghost-claro boton-pequeno" href="https://www.google.com/maps/search/?api=1&query=<?= urlencode(DIRECCION) ?>" target="_blank" rel="noopener">Ver en Google Maps</a>
-            </div>
-        </div>
-
-        <!-- TODO: Confirmar horario con cliente -->
-        <p class="nosotros-horario">Atención de lunes a sábado, 8:00 a.m. a 5:00 p.m.</p>
+        <!-- TODO: Reemplazar por iframe de Google Maps embebido cuando el cliente confirme dirección exacta -->
+        <a class="contacto-mapa" href="https://www.google.com/maps/search/?api=1&query=Santa+Clara+San+Carlos+Alajuela+Costa+Rica" target="_blank" rel="noopener">
+            <span class="contacto-mapa-pin" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            </span>
+            <span class="contacto-mapa-texto mono">[ mapa de Google — Santa Clara, San Carlos ]</span>
+        </a>
     </div>
 </section>
 
