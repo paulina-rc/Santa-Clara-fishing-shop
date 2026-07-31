@@ -7,6 +7,8 @@ require_once __DIR__ . '/../../includes/auth.php';
 
 requerir_login();
 
+$logoAdmin = is_file(__DIR__ . '/../assets/img/logo.png') ? '../assets/img/logo.png' : null;
+
 $errores = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -63,7 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <header class="cabecera-admin">
-    <h1>Tienda de Pesca Santa Clara</h1>
+    <div class="cabecera-admin-marca">
+        <?php if ($logoAdmin !== null): ?>
+            <img src="<?= e($logoAdmin) ?>" alt="" class="cabecera-admin-logo">
+        <?php endif; ?>
+        <h1>Tienda de Pesca Santa Clara</h1>
+    </div>
     <nav class="nav-admin">
         <a href="index.php">Inicio</a>
         <a href="productos.php">Productos</a>

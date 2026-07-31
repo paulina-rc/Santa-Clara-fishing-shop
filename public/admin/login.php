@@ -10,6 +10,8 @@ if (admin_autenticado()) {
     exit;
 }
 
+$logoAdmin = is_file(__DIR__ . '/../assets/img/logo.png') ? '../assets/img/logo.png' : null;
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,6 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="pagina-login">
 <main class="tarjeta-login">
+    <?php if ($logoAdmin !== null): ?>
+        <div class="login-logo">
+            <img src="<?= e($logoAdmin) ?>" alt="Tienda de Pesca Santa Clara">
+        </div>
+    <?php endif; ?>
     <h1>Tienda de Pesca Santa Clara</h1>
     <p class="subtitulo">Panel de administración</p>
 

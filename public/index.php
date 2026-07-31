@@ -18,8 +18,8 @@ $stmtDestacados->close();
 
 $heroFoto = null;
 foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
-    if (is_file(__DIR__ . '/assets/img/hero.' . $ext)) {
-        $heroFoto = 'assets/img/hero.' . $ext;
+    if (is_file(__DIR__ . '/assets/img/foto-portada.' . $ext)) {
+        $heroFoto = 'assets/img/foto-portada.' . $ext;
         break;
     }
 }
@@ -40,7 +40,9 @@ require __DIR__ . '/includes/header.php';
         </div>
         <div class="hero-visual">
             <?php if ($heroFoto !== null): ?>
-                <img class="hero-photo" src="<?= e($heroFoto) ?>" alt="Pescador lanzando línea en Santa Clara">
+                <div class="hero-photo">
+                    <img class="hero-photo-img" src="<?= e($heroFoto) ?>" alt="Tienda de Pesca Santa Clara">
+                </div>
             <?php endif; ?>
         </div>
     </div>

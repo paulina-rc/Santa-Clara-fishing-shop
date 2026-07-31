@@ -1,13 +1,7 @@
 # Esta carpeta solo debe contener imagenes subidas desde el admin.
 # Se deshabilita por completo la ejecucion de PHP como capa extra de seguridad.
 
-# Para servidores con mod_php
-php_flag engine off
-<IfModule mod_php.c>
-    php_admin_flag engine off
-</IfModule>
-
-# Para servidores con PHP-FPM / mod_rewrite (php_flag no aplica en ese caso)
+# Bloquear ejecución de scripts PHP en esta carpeta
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule \.(php|phtml|phar)$ - [F,L]

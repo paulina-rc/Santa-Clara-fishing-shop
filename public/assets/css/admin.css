@@ -41,6 +41,20 @@ a {
     margin: 0;
 }
 
+.cabecera-admin-marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.cabecera-admin-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 .nav-admin {
     display: flex;
     flex-wrap: wrap;
@@ -163,6 +177,20 @@ a {
     color: var(--marino);
     margin: 0 0 0.25rem;
     text-align: center;
+}
+
+.login-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.login-logo img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--marino);
 }
 
 .subtitulo {

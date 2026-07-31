@@ -18,6 +18,8 @@ $resultadoNav = $mysqli->query('SELECT slug, nombre FROM categorias WHERE activa
 if ($resultadoNav) {
     $categoriasNav = $resultadoNav->fetch_all(MYSQLI_ASSOC);
 }
+
+$logoSitio = is_file(__DIR__ . '/../assets/img/logo.png') ? 'assets/img/logo.png' : null;
 ?>
 <!doctype html>
 <html lang="es">
@@ -45,11 +47,15 @@ if ($resultadoNav) {
 <header class="cabecera">
     <a class="cabecera-logo" href="index.php">
         <span class="cabecera-logo-insignia" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12c3-4 8-6 13-4 2 .8 4 2.4 5 4-1 1.6-3 3.2-5 4-5 2-10 0-13-4Z"/>
-                <circle cx="8.2" cy="11.3" r=".6" fill="currentColor" stroke="none"/>
-                <path d="M18 9.5 21 7M18 14.5 21 17"/>
-            </svg>
+            <?php if ($logoSitio !== null): ?>
+                <img src="<?= e($logoSitio) ?>" alt="" class="cabecera-logo-img">
+            <?php else: ?>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12c3-4 8-6 13-4 2 .8 4 2.4 5 4-1 1.6-3 3.2-5 4-5 2-10 0-13-4Z"/>
+                    <circle cx="8.2" cy="11.3" r=".6" fill="currentColor" stroke="none"/>
+                    <path d="M18 9.5 21 7M18 14.5 21 17"/>
+                </svg>
+            <?php endif; ?>
         </span>
         <span class="cabecera-logo-texto">
             <span class="cabecera-logo-nombre">Tienda de Pesca</span>

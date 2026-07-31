@@ -94,15 +94,22 @@ h1, h2, h3 {
 }
 
 .cabecera-logo-insignia {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
+    overflow: hidden;
     background: var(--marino);
     color: var(--dorado);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+.cabecera-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .cabecera-logo-texto {
@@ -308,17 +315,20 @@ h1, h2, h3 {
     color: var(--teal);
 }
 
-.hero-visual {
+.hero-photo {
+    position: relative;
+    z-index: 1;
     aspect-ratio: 4 / 5;
     border-radius: 6px;
     overflow: hidden;
-    background: linear-gradient(155deg, var(--marino) 0%, var(--teal) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.hero-photo {
+.hero-photo-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 /* --------------------------------------------------------------------
@@ -825,9 +835,17 @@ h1, h2, h3 {
     position: relative;
     aspect-ratio: 4 / 5;
     border-radius: 6px;
+    overflow: hidden;
     background: linear-gradient(155deg, var(--marino) 0%, var(--teal) 100%);
     display: flex;
     align-items: flex-end;
+}
+
+.nosotros-foto-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .nosotros-foto-caption {
@@ -865,6 +883,16 @@ h1, h2, h3 {
     display: flex;
     flex-direction: column;
     gap: 14px;
+}
+
+.contacto-secundarias {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.contacto-secundarias > *:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
 }
 
 .tarjeta-contacto {
@@ -922,6 +950,15 @@ a.tarjeta-info:hover {
     color: var(--teal);
 }
 
+.tarjeta-instagram .tarjeta-contacto-icono,
+.tarjeta-tiktok .tarjeta-contacto-icono,
+.tarjeta-facebook .tarjeta-contacto-icono {
+    width: 34px;
+    height: 34px;
+    background: none;
+    border-radius: 0;
+}
+
 .tarjeta-contacto-texto {
     display: flex;
     flex-direction: column;
@@ -972,8 +1009,10 @@ a.tarjeta-info:hover {
     color: var(--carbon);
 }
 
-.tarjeta-instagram .tarjeta-contacto-handle {
-    font-size: 16px;
+.tarjeta-instagram .tarjeta-contacto-handle,
+.tarjeta-tiktok .tarjeta-contacto-handle,
+.tarjeta-facebook .tarjeta-contacto-handle {
+    font-size: 15px;
     font-weight: 700;
     color: var(--carbon);
 }
@@ -1105,6 +1144,9 @@ a.tarjeta-info:hover {
 
     .hero-visual {
         order: -1;
+    }
+
+    .hero-photo {
         aspect-ratio: 16 / 10;
     }
 
@@ -1184,6 +1226,10 @@ a.tarjeta-info:hover {
     .contacto-grid {
         grid-template-columns: 1fr;
         gap: 24px;
+    }
+
+    .contacto-secundarias {
+        grid-template-columns: 1fr;
     }
 
     .contacto-mapa {
