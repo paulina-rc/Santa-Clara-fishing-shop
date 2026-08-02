@@ -18,8 +18,8 @@ $stmtDestacados->close();
 
 $heroFoto = null;
 foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
-    if (is_file(__DIR__ . '/assets/img/foto-portada.' . $ext)) {
-        $heroFoto = 'assets/img/foto-portada.' . $ext;
+    if (is_file(__DIR__ . '/assets/uploads/foto-portada.' . $ext)) {
+        $heroFoto = 'assets/uploads/foto-portada.' . $ext;
         break;
     }
 }
