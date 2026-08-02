@@ -63,9 +63,6 @@ require __DIR__ . '/includes/header.php';
             <div class="nosotros-foto">
                 <?php if ($nosotrosFoto !== null): ?>
                     <img src="<?= e($nosotrosFoto) ?>" alt="Tienda de Pesca Santa Clara" class="nosotros-foto-img">
-                <?php else: ?>
-                    <!-- TODO: Reemplazar con foto real que envíe el cliente -->
-                    <p class="nosotros-foto-caption mono">[ foto del interior de la tienda o del equipo ]</p>
                 <?php endif; ?>
             </div>
         </div>

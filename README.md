@@ -114,6 +114,36 @@ checklist post-despliegue), ver **[DEPLOY.md](DEPLOY.md)**.
   eliminación con confirmación, cambio de contraseña del admin, y guía de
   despliegue (`DEPLOY.md`).
 
+## Generar favicons a partir del logo
+
+El logo fuente vive en `public/assets/img/logo.png`. El sitio espera además
+estos archivos en la misma carpeta (`public/assets/img/`) para mostrar el
+ícono en la pestaña del navegador:
+
+- `favicon.ico`
+- `favicon-16x16.png`
+- `favicon-32x32.png`
+- `apple-touch-icon.png`
+
+**Opción rápida (recomendada):**
+
+1. Ir a https://realfavicongenerator.net
+2. Subir `logo.png`
+3. Descargar el ZIP y extraer esos 4 archivos en `public/assets/img/`
+
+**Opción manual con ImageMagick** (si está instalado):
+
+```bash
+cd public/assets/img
+magick logo.png -resize 32x32 favicon-32x32.png
+magick logo.png -resize 16x16 favicon-16x16.png
+magick logo.png -resize 180x180 apple-touch-icon.png
+magick logo.png -define icon:auto-resize=16,32,48 favicon.ico
+```
+
+Mientras estos archivos no existan, el sitio sigue funcionando con normalidad
+(el navegador simplemente no muestra un ícono personalizado en la pestaña).
+
 ## Validación
 
 Todos los archivos PHP deben pasar sin errores de sintaxis:
