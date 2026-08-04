@@ -164,8 +164,16 @@ h1, h2, h3 {
 
 .cabecera-icono {
     display: inline-flex;
+    align-items: center;
     color: var(--carbon);
     opacity: 0.75;
+    transition: color 200ms ease, opacity 200ms ease;
+}
+
+.cabecera-icono:hover,
+.cabecera-icono.activo {
+    color: var(--teal);
+    opacity: 1;
 }
 
 .boton-whatsapp {
@@ -522,6 +530,99 @@ h1, h2, h3 {
 }
 
 /* --------------------------------------------------------------------
+   Pagina de busqueda (buscar.php)
+   -------------------------------------------------------------------- */
+.seccion-buscar {
+    padding: 56px 0 80px;
+}
+
+.buscar-titulo {
+    font-size: 32px;
+    color: var(--marino);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.buscar-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    max-width: 720px;
+}
+
+.buscar-input-wrap {
+    position: relative;
+    flex: 1;
+}
+
+.buscar-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--gris);
+    pointer-events: none;
+}
+
+.buscar-form input[type="search"] {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1px solid var(--linea);
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 15px;
+    background: #fff;
+    color: var(--carbon);
+    outline: none;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.buscar-form input[type="search"]:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(30, 122, 110, 0.12);
+}
+
+.buscar-btn {
+    padding: 14px 24px;
+    background: var(--marino);
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 200ms ease;
+}
+
+.buscar-btn:hover {
+    background: var(--marino-2);
+}
+
+.buscar-resumen {
+    color: var(--gris);
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.buscar-resumen strong {
+    color: var(--carbon);
+}
+
+.buscar-resumen a {
+    color: var(--teal);
+    text-decoration: underline;
+}
+
+.buscar-hint {
+    color: var(--gris);
+    font-size: 14px;
+    margin-top: 24px;
+}
+
+/* --------------------------------------------------------------------
    Banda de contacto
    -------------------------------------------------------------------- */
 .banda-contacto {
@@ -683,7 +784,7 @@ h1, h2, h3 {
 }
 
 .detalle-producto {
-    padding: 24px 0 64px;
+    padding: 48px 48px 64px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
@@ -696,13 +797,18 @@ h1, h2, h3 {
     border-radius: 8px;
     overflow: hidden;
     background: var(--crema-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
 .detalle-foto img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     display: block;
 }
 
@@ -1020,32 +1126,19 @@ a.tarjeta-info:hover {
 }
 
 .contacto-mapa {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
     min-height: 460px;
     border-radius: 10px;
+    overflow: hidden;
     border: 1px solid var(--linea);
-    background:
-        linear-gradient(rgba(43, 43, 42, 0.06) 1px, transparent 1px) 0 0 / 40px 40px,
-        linear-gradient(90deg, rgba(43, 43, 42, 0.06) 1px, transparent 1px) 0 0 / 40px 40px,
-        #EAE6D8;
-    color: var(--marino);
-    text-decoration: none;
-    transition: filter 0.2s ease;
+    background: #F2EFE6;
 }
 
-.contacto-mapa:hover {
-    filter: brightness(0.98);
-}
-
-.contacto-mapa-texto {
-    font-size: 12px;
-    color: var(--gris);
-    text-align: center;
-    padding: 0 16px;
+.contacto-mapa iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 460px;
+    border: 0;
+    display: block;
 }
 
 /* --------------------------------------------------------------------
@@ -1099,6 +1192,11 @@ a.tarjeta-info:hover {
 
     .contacto {
         padding: 32px;
+    }
+
+    .detalle-producto {
+        padding: 32px;
+        gap: 32px;
     }
 }
 
@@ -1182,6 +1280,22 @@ a.tarjeta-info:hover {
         padding: 24px 0 40px;
     }
 
+    .seccion-buscar {
+        padding: 24px 0 48px;
+    }
+
+    .buscar-titulo {
+        font-size: 26px;
+    }
+
+    .buscar-form {
+        flex-direction: column;
+    }
+
+    .buscar-btn {
+        width: 100%;
+    }
+
     .grid-categorias {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1203,6 +1317,7 @@ a.tarjeta-info:hover {
 
     .detalle-producto {
         grid-template-columns: 1fr;
+        padding: 24px 20px;
         gap: 24px;
     }
 
@@ -1243,8 +1358,9 @@ a.tarjeta-info:hover {
         grid-template-columns: 1fr;
     }
 
-    .contacto-mapa {
-        min-height: 280px;
+    .contacto-mapa,
+    .contacto-mapa iframe {
+        min-height: 320px;
     }
 }
 

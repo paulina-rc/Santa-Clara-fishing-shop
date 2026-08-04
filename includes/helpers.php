@@ -98,8 +98,9 @@ function recortar(string $texto, int $limite): string
 }
 
 /**
- * Devuelve la ruta relativa (desde public/) de la foto de un producto,
+ * Devuelve la URL absoluta (via UPLOADS_URL) de la foto de un producto,
  * o null si no tiene imagen asignada o el archivo no existe en disco.
+ * Absoluta para que funcione igual desde public/ y desde public/admin/.
  */
 function producto_imagen_src(?string $imagen): ?string
 {
@@ -111,7 +112,7 @@ function producto_imagen_src(?string $imagen): ?string
         return null;
     }
 
-    return 'assets/uploads/' . rawurlencode($imagen);
+    return UPLOADS_URL . rawurlencode($imagen);
 }
 
 /**

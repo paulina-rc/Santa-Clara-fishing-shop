@@ -75,14 +75,11 @@ $logoSitio = is_file(__DIR__ . '/../assets/img/logo.png') ? 'assets/img/logo.png
     </nav>
 
     <div class="cabecera-acciones">
-        <span class="cabecera-icono" aria-hidden="true">
+        <a class="cabecera-icono <?= $pagina_activa === 'buscar' ? 'activo' : '' ?>" href="buscar.php" aria-label="Buscar productos">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="20" y1="20" x2="15.4" y2="15.4"/></svg>
-        </span>
-        <span class="cabecera-icono" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c1.4-3.6 4.6-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
-        </span>
+        </a>
         <a class="boton-whatsapp" href="<?= e(url_whatsapp('Hola, quiero más información sobre sus productos.')) ?>" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.1 8.1 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8.9-.2.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s1 2.6 1.1 2.7c.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+            <svg viewBox="0 0 32 32" width="24" height="24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.117.554 4.108 1.522 5.833L4 27l6.336-1.499A11.94 11.94 0 0016.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm0 21.6c-1.816 0-3.517-.494-4.976-1.351l-.357-.212-3.762.89.895-3.665-.233-.376A9.548 9.548 0 016.4 15c0-5.293 4.308-9.6 9.601-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.293-4.307 9.6-9.6 9.6zm5.276-7.194c-.29-.145-1.714-.845-1.979-.94-.265-.096-.458-.145-.65.146-.194.29-.746.94-.915 1.134-.169.194-.338.218-.628.073-.29-.145-1.226-.452-2.335-1.44-.863-.769-1.446-1.72-1.615-2.01-.169-.29-.018-.446.127-.591.13-.129.29-.338.435-.507.145-.169.194-.29.29-.483.097-.194.048-.363-.024-.508-.073-.145-.65-1.568-.891-2.148-.234-.564-.472-.488-.65-.497l-.554-.01a1.06 1.06 0 00-.77.362c-.264.29-1.007.985-1.007 2.402 0 1.417 1.031 2.787 1.175 2.98.145.193 2.032 3.098 4.925 4.345.688.297 1.225.474 1.643.607.69.219 1.319.188 1.815.114.554-.083 1.714-.7 1.957-1.376.242-.677.242-1.257.169-1.377-.073-.12-.264-.194-.554-.339z"/></svg>
             <?= e(WHATSAPP_DISPLAY) ?>
         </a>
         <button type="button" class="cabecera-hamburguesa" id="botonMenuMovil" aria-label="Abrir menú" aria-expanded="false" aria-controls="navPrincipal">

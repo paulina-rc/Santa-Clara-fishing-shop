@@ -78,10 +78,7 @@ require __DIR__ . '/includes/header.php';
         <div class="contacto-stack">
             <a class="tarjeta-contacto tarjeta-whatsapp" href="<?= e(url_whatsapp('Hola, quisiera más información.')) ?>" target="_blank" rel="noopener noreferrer">
                 <span class="tarjeta-contacto-icono" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff">
-                        <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4.1-3.6-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.4z"/>
-                        <path d="M20 4A10 10 0 003.4 15.6L2 22l6.6-1.4A10 10 0 1020 4zm-8 17.4a7.4 7.4 0 01-3.8-1l-.3-.2-3.9.8.8-3.8-.2-.3a7.4 7.4 0 1113.7-3.9A7.4 7.4 0 0112 21.4z"/>
-                    </svg>
+                    <svg viewBox="0 0 32 32" width="22" height="22" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.117.554 4.108 1.522 5.833L4 27l6.336-1.499A11.94 11.94 0 0016.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm0 21.6c-1.816 0-3.517-.494-4.976-1.351l-.357-.212-3.762.89.895-3.665-.233-.376A9.548 9.548 0 016.4 15c0-5.293 4.308-9.6 9.601-9.6 5.293 0 9.6 4.307 9.6 9.6 0 5.293-4.307 9.6-9.6 9.6zm5.276-7.194c-.29-.145-1.714-.845-1.979-.94-.265-.096-.458-.145-.65.146-.194.29-.746.94-.915 1.134-.169.194-.338.218-.628.073-.29-.145-1.226-.452-2.335-1.44-.863-.769-1.446-1.72-1.615-2.01-.169-.29-.018-.446.127-.591.13-.129.29-.338.435-.507.145-.169.194-.29.29-.483.097-.194.048-.363-.024-.508-.073-.145-.65-1.568-.891-2.148-.234-.564-.472-.488-.65-.497l-.554-.01a1.06 1.06 0 00-.77.362c-.264.29-1.007.985-1.007 2.402 0 1.417 1.031 2.787 1.175 2.98.145.193 2.032 3.098 4.925 4.345.688.297 1.225.474 1.643.607.69.219 1.319.188 1.815.114.554-.083 1.714-.7 1.957-1.376.242-.677.242-1.257.169-1.377-.073-.12-.264-.194-.554-.339z"/></svg>
                 </span>
                 <span class="tarjeta-contacto-texto">
                     <span class="tarjeta-contacto-label mono">WhatsApp</span>
@@ -162,13 +159,21 @@ require __DIR__ . '/includes/header.php';
             </div>
         </div>
 
-        <!-- TODO: Reemplazar por iframe de Google Maps embebido cuando el cliente confirme dirección exacta -->
-        <a class="contacto-mapa" href="<?= e(MAPS_URL) ?>" target="_blank" rel="noopener noreferrer">
-            <span class="contacto-mapa-pin" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
-            </span>
-            <span class="contacto-mapa-texto mono">[ mapa de Google — Santa Clara, Quesada ]</span>
-        </a>
+        <!-- TODO: Reemplazar src del iframe con el embed exacto de Google Maps.
+             Ir a maps.google.com → buscar "500m plaza deportes Santa Clara Quesada"
+             → Compartir → Incorporar un mapa → copiar src del iframe -->
+        <div class="contacto-mapa">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15723.842!2d-84.5253!3d10.3271!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSanta%20Clara%2C%20Quesada%2C%20Costa%20Rica!5e0!3m2!1ses!2scr!4v1700000000"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Ubicación Tienda de Pesca Santa Clara">
+            </iframe>
+        </div>
     </div>
 </section>
 

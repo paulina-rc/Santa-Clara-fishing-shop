@@ -50,7 +50,7 @@ $meta_titulo = $producto['nombre'] . ' · Tienda de Pesca Santa Clara';
 $meta_descripcion = $producto['descripcion'] !== null && $producto['descripcion'] !== ''
     ? recortar($producto['descripcion'], 155)
     : 'Conocé ' . $producto['nombre'] . ' en Tienda de Pesca Santa Clara. Consultá disponibilidad y precio por WhatsApp.';
-$meta_imagen = $imagenSrc !== null ? rtrim(BASE_URL, '/') . '/' . $imagenSrc : '';
+$meta_imagen = $imagenSrc ?? '';
 
 $stmtRelacionados = $mysqli->prepare(
     'SELECT * FROM productos WHERE activo = 1 AND categoria_id = ? AND id <> ? ORDER BY RAND() LIMIT 4'
@@ -79,16 +79,18 @@ require __DIR__ . '/includes/header.php';
     </div>
 
     <div class="detalle-info">
-        <span class="detalle-marca mono"><?= e($producto['marca'] ?? '') ?></span>
+        <?php if (!empty($producto['marca'])): ?>
+            <span class="detalle-marca mono"><?= e($producto['marca']) ?></span>
+        <?php endif; ?>
         <h1 class="detalle-nombre"><?= e($producto['nombre']) ?></h1>
         <span class="detalle-precio"><?= $precioFormateado ?></span>
 
-        <?php if ($producto['descripcion'] !== null && $producto['descripcion'] !== ''): ?>
+        <?php if (!empty($producto['descripcion'])): ?>
             <div class="detalle-descripcion"><?= nl2br(e($producto['descripcion'])) ?></div>
         <?php endif; ?>
 
         <div class="detalle-botones">
-            <a class="boton boton-dorado" href="<?= e(url_whatsapp('Hola, me interesa el producto: ' . $producto['nombre'] . ' — ' . $precioFormateado . '. ¿Tienen disponible?')) ?>" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+            <a class="boton boton-dorado" href="<?= e(url_whatsapp('Hola, me gustaría consultar por el producto: ' . $producto['nombre'] . ' — ' . $precioFormateado . '. ¿Tienen disponible?')) ?>" target="_blank" rel="noopener">Consultar por WhatsApp</a>
             <a class="boton boton-ghost" href="productos.php?cat=<?= e($producto['cat_slug']) ?>">Ver más productos</a>
         </div>
     </div>
