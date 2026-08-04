@@ -1058,7 +1058,6 @@ a.tarjeta-info:hover {
     color: var(--teal);
 }
 
-.tarjeta-instagram .tarjeta-contacto-icono,
 .tarjeta-tiktok .tarjeta-contacto-icono,
 .tarjeta-facebook .tarjeta-contacto-icono {
     width: 34px;
@@ -1117,7 +1116,6 @@ a.tarjeta-info:hover {
     color: var(--carbon);
 }
 
-.tarjeta-instagram .tarjeta-contacto-handle,
 .tarjeta-tiktok .tarjeta-contacto-handle,
 .tarjeta-facebook .tarjeta-contacto-handle {
     font-size: 15px;

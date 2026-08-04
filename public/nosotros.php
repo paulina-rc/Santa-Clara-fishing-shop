@@ -110,27 +110,6 @@ require __DIR__ . '/includes/header.php';
                     </span>
                 </div>
 
-                <a class="tarjeta-contacto tarjeta-info tarjeta-instagram" href="https://instagram.com/<?= e(INSTAGRAM_USUARIO) ?>" target="_blank" rel="noopener noreferrer">
-                    <span class="tarjeta-contacto-icono" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="34" height="34">
-                            <defs>
-                                <linearGradient id="ig-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#F58529"/>
-                                    <stop offset="50%" stop-color="#DD2A7B"/>
-                                    <stop offset="100%" stop-color="#8134AF"/>
-                                </linearGradient>
-                            </defs>
-                            <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-gradient)"/>
-                            <circle cx="12" cy="12" r="4" fill="none" stroke="#fff" stroke-width="1.8"/>
-                            <circle cx="17.5" cy="6.5" r="1.2" fill="#fff"/>
-                        </svg>
-                    </span>
-                    <span class="tarjeta-contacto-texto">
-                        <span class="tarjeta-contacto-label mono">Instagram</span>
-                        <span class="tarjeta-contacto-handle">@<?= e(INSTAGRAM_USUARIO) ?></span>
-                    </span>
-                </a>
-
                 <a class="tarjeta-contacto tarjeta-info tarjeta-tiktok" href="https://www.tiktok.com/@<?= e(TIKTOK_USUARIO) ?>" target="_blank" rel="noopener noreferrer">
                     <span class="tarjeta-contacto-icono" aria-hidden="true">
                         <svg viewBox="0 0 24 24" width="34" height="34">

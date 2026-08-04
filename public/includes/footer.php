@@ -28,7 +28,6 @@ if (!defined('BASE_URL')) {
                 <ul>
                     <li><a href="<?= e(url_whatsapp('Hola, quiero más información sobre sus productos.')) ?>" target="_blank" rel="noopener">WhatsApp <?= e(WHATSAPP_DISPLAY) ?></a></li>
                     <li><a href="mailto:<?= e(EMAIL_CONTACTO) ?>"><?= e(EMAIL_CONTACTO) ?></a></li>
-                    <li><a href="https://instagram.com/<?= e(INSTAGRAM_USUARIO) ?>" target="_blank" rel="noopener">@<?= e(INSTAGRAM_USUARIO) ?></a></li>
                     <li><span><?= e(DIRECCION) ?></span></li>
                 </ul>
             </div>

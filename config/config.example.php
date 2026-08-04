@@ -22,7 +22,7 @@ define('DB_CHARSET', 'utf8mb4');
 // Contacto / redes sociales
 define('WHATSAPP_NUMERO', '50688275387');   // formato internacional, solo digitos
 define('WHATSAPP_DISPLAY', '8827-5387');    // formato para mostrar en pantalla
-define('INSTAGRAM_USUARIO', 'tiendapescasantaclara');
+// define('INSTAGRAM_USUARIO', 'tiendapescasantaclara'); // sin cuenta actual
 define('TIKTOK_USUARIO', 'tienda.de.pesca');
 define('FACEBOOK_URL', 'https://www.facebook.com/search/top?q=tienda%20de%20pesca%20santa%20clara');
 define('EMAIL_CONTACTO', 'contacto@tiendapescasantaclara.com');
