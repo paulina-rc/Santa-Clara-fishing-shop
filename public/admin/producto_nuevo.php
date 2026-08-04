@@ -182,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="imagen">Imagen</label>
         <input type="file" id="imagen" name="imagen" accept="image/jpeg,image/png,image/webp" onchange="previsualizarImagen(this)">
         <p class="nota-campo">Máximo 3 MB. JPG, PNG o WEBP.</p>
+        <p class="hint-foto">Sugerencia: para mejores resultados, usa fotos cuadradas y con el producto centrado. Las fotos verticales u horizontales se recortarán automáticamente por los bordes.</p>
         <img id="preview-imagen" class="preview-imagen" alt="Vista previa" style="display:none;">
 
         <label class="campo-checkbox">

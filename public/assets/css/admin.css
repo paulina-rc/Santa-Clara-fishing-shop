@@ -524,6 +524,13 @@ a {
     color: #888;
 }
 
+.hint-foto {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
 .preview-imagen,
 .imagen-actual {
     max-width: 200px;

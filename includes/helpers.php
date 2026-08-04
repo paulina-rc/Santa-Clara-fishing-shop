@@ -143,13 +143,13 @@ function tarjeta_producto(array $producto): string
 function categoria_icono_svg(string $slug): string
 {
     $iconos = [
-        'canas' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="5" y1="19" x2="18" y2="6"/><circle cx="19.4" cy="4.6" r="1.6"/></svg>',
-        'carretes' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3"/></svg>',
-        'senuelos' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3v10"/><path d="M12 13a4 4 0 1 0 4 4c0-1.8-1.2-2.8-2.4-3.6"/><circle cx="12" cy="3" r="1.4" fill="currentColor" stroke="none"/></svg>',
-        'ropa' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 4 4 7l1.8 2.6L8 8.3V20h8V8.3l2.2 1.3L20 7l-4-3-2 1.6h-4L8 4Z"/></svg>',
-        'accesorios' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></svg>',
-        'ofertas' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M20 12.5 12.5 20a2.1 2.1 0 0 1-3 0L4 14.5a2.1 2.1 0 0 1 0-3L11.5 4H17a3 3 0 0 1 3 3v5.5Z"/><circle cx="15" cy="8" r="1.3" fill="currentColor" stroke="none"/></svg>',
+        'canas' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 L18 5"/><circle cx="18" cy="5" r="1.4" fill="currentColor"/><path d="M14 9 L14 14"/><path d="M14 14 Q13 15.5 14 17 Q15 15.5 14 14"/></svg>',
+        'carretes' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><path d="M12 5 L12 3"/><path d="M12 19 L12 21"/><circle cx="12" cy="3" r="0.8" fill="currentColor"/></svg>',
+        'senuelos' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 14"/><path d="M12 14 Q12 19 8 19 Q5 19 5 16"/><path d="M4 16 L6 16"/><circle cx="12" cy="3" r="0.8" fill="currentColor"/></svg>',
+        'ropa' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4 L5 6 L6 9 L8 8 L8 20 L16 20 L16 8 L18 9 L19 6 L16 4 L14 5 Q12 6.5 10 5 Z"/></svg>',
+        'accesorios' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 L5 20 Q5 21 6 21 L18 21 Q19 21 19 20 L19 9 Z"/><path d="M9 9 L9 6 Q9 4 12 4 Q15 4 15 6 L15 9"/><path d="M5 13 L19 13"/></svg>',
+        'ofertas' => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 L12 20 L3 11 L3 4 L10 4 Z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>',
     ];
 
-    return $iconos[$slug] ?? '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="7"/></svg>';
+    return $iconos[$slug] ?? '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/></svg>';
 }
