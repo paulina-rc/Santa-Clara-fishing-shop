@@ -10,9 +10,9 @@ declare(strict_types=1);
  *   3. BORRA ESTE ARCHIVO del servidor inmediatamente despues de usarlo.
  */
 
-$usuario  = 'admin';
+$usuario  = 'administrador';
 $password = '12345678';
-$nombre   = 'Paulina';
+$nombre   = 'David Chacon';
 
 if ($password === 'CAMBIAR_ESTA_CONTRASENA') {
     fwrite(STDERR, "Edita este archivo y cambia la variable \$password antes de ejecutarlo.\n");
