@@ -44,7 +44,8 @@ if (!$producto) {
     exit;
 }
 
-$imagenSrc = producto_imagen_src($producto['imagen']);
+$imagenes = imagenes_producto((int) $producto['id']);
+$imagenPrincipal = imagen_principal_producto((int) $producto['id']);
 $precioFormateado = precio((float) $producto['precio']);
 $urlCatalogoProducto = 'productos.php?cat=' . rawurlencode($producto['cat_slug'])
     . (!empty($producto['sub_slug']) ? '&sub=' . rawurlencode($producto['sub_slug']) : '');
@@ -54,10 +55,17 @@ $meta_titulo = $producto['nombre'] . ' · Tienda de Pesca Santa Clara';
 $meta_descripcion = $producto['descripcion'] !== null && $producto['descripcion'] !== ''
     ? recortar($producto['descripcion'], 155)
     : 'Conocé ' . $producto['nombre'] . ' en Tienda de Pesca Santa Clara. Consultá disponibilidad y precio por WhatsApp.';
-$meta_imagen = $imagenSrc ?? '';
+$meta_imagen = $imagenPrincipal !== null ? (producto_imagen_src($imagenPrincipal) ?? '') : '';
 
 $stmtRelacionados = $mysqli->prepare(
-    'SELECT * FROM productos WHERE activo = 1 AND categoria_id = ? AND id <> ? ORDER BY RAND() LIMIT 4'
+    'SELECT p.*,
+            (SELECT archivo FROM producto_imagenes
+             WHERE producto_id = p.id
+             ORDER BY es_principal DESC, orden ASC, id ASC
+             LIMIT 1) AS imagen_principal
+     FROM productos p
+     WHERE p.activo = 1 AND p.categoria_id = ? AND p.id <> ?
+     ORDER BY RAND() LIMIT 4'
 );
 $stmtRelacionados->bind_param('ii', $producto['categoria_id'], $producto['id']);
 $stmtRelacionados->execute();
@@ -77,11 +85,51 @@ require __DIR__ . '/includes/header.php';
 </p>
 
 <section class="detalle-producto contenedor">
-    <div class="detalle-foto">
-        <?php if ($imagenSrc !== null): ?>
-            <img src="<?= e($imagenSrc) ?>" alt="<?= e($producto['nombre']) ?>">
+    <div class="galeria">
+        <?php if (count($imagenes) === 0): ?>
+            <div class="galeria-principal galeria-vacia">
+                <div class="tarjeta-producto-sin-foto" aria-hidden="true">Sin foto</div>
+            </div>
         <?php else: ?>
-            <div class="tarjeta-producto-sin-foto" aria-hidden="true">Sin foto</div>
+            <div class="galeria-principal" data-total="<?= count($imagenes) ?>">
+                <?php if (count($imagenes) > 1): ?>
+                    <button type="button" class="galeria-flecha galeria-anterior" aria-label="Foto anterior">‹</button>
+                    <button type="button" class="galeria-flecha galeria-siguiente" aria-label="Foto siguiente">›</button>
+                <?php endif; ?>
+
+                <?php foreach ($imagenes as $idx => $img): ?>
+                    <?php $fotoSrc = producto_imagen_src($img['archivo']); ?>
+                    <?php if ($fotoSrc !== null): ?>
+                        <img
+                            src="<?= e($fotoSrc) ?>"
+                            alt="<?= e($producto['nombre']) ?> - foto <?= $idx + 1 ?>"
+                            class="galeria-foto <?= $idx === 0 ? 'activa' : '' ?>"
+                            data-index="<?= $idx ?>">
+                    <?php endif; ?>
+                <?php endforeach; ?>
+
+                <?php if (count($imagenes) > 1): ?>
+                    <div class="galeria-contador">
+                        <span class="galeria-actual">1</span> / <?= count($imagenes) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if (count($imagenes) > 1): ?>
+                <div class="galeria-miniaturas">
+                    <?php foreach ($imagenes as $idx => $img): ?>
+                        <?php $miniSrc = producto_imagen_src($img['archivo']); ?>
+                        <?php if ($miniSrc !== null): ?>
+                            <button type="button"
+                                    class="galeria-mini <?= $idx === 0 ? 'activa' : '' ?>"
+                                    data-index="<?= $idx ?>"
+                                    aria-label="Ver foto <?= $idx + 1 ?>">
+                                <img src="<?= e($miniSrc) ?>" alt="Miniatura <?= $idx + 1 ?>">
+                            </button>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 

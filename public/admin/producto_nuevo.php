@@ -73,16 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'El precio debe ser un número mayor o igual a 0.';
     }
 
-    $imagenValidada = false;
-    if (!empty($_FILES['imagen']['name'])) {
-        $resultado = validar_imagen($_FILES['imagen']);
-        if (!$resultado['ok']) {
-            $errores[] = $resultado['error'];
-        } else {
-            $imagenValidada = true;
-        }
-    }
-
     if ($errores === []) {
         $precioFinal = (float) $precioTexto;
         $stmt = $mysqli->prepare(
@@ -109,16 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idProducto = (int) $stmt->insert_id;
         $stmt->close();
 
-        if ($imagenValidada) {
-            $nombreArchivo = guardar_imagen($_FILES['imagen'], $idProducto, $nombre);
-            if ($nombreArchivo !== false) {
-                $actualizar = $mysqli->prepare('UPDATE productos SET imagen = ? WHERE id = ?');
-                $actualizar->bind_param('si', $nombreArchivo, $idProducto);
-                $actualizar->execute();
-                $actualizar->close();
-            } else {
-                flash_set('error', 'El producto se creó, pero la imagen no se pudo guardar.');
-            }
+        $archivosImagenes = $_FILES['imagenes'] ?? ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
+        $resultadoImagenes = guardar_imagenes_multiples($archivosImagenes, $idProducto, $nombre);
+        foreach ($resultadoImagenes['errores'] as $errorImagen) {
+            flash_set('error', $errorImagen);
         }
 
         flash_set('exito', 'Producto agregado ✓');
@@ -201,11 +185,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="precio">Precio (₡) *</label>
         <input type="number" id="precio" name="precio" min="0" step="1" required value="<?= e($precio) ?>">
 
-        <label for="imagen">Imagen</label>
-        <input type="file" id="imagen" name="imagen" accept="image/jpeg,image/png,image/webp" onchange="previsualizarImagen(this)">
-        <p class="nota-campo">Máximo 3 MB. JPG, PNG o WEBP.</p>
-        <p class="hint-foto">Sugerencia: para mejores resultados, usa fotos cuadradas y con el producto centrado. Las fotos verticales u horizontales se recortarán automáticamente por los bordes.</p>
-        <img id="preview-imagen" class="preview-imagen" alt="Vista previa" style="display:none;">
+        <label for="imagenes-input">Imágenes del producto (hasta 10)</label>
+        <input type="file" id="imagenes-input" name="imagenes[]" multiple accept="image/jpeg,image/png,image/webp" data-sin-fotos="1">
+        <p class="nota-campo">Máximo 3 MB por foto. JPG, PNG o WEBP.</p>
+        <p class="hint-foto">Puedes seleccionar hasta 10 fotos a la vez. La primera imagen será la principal (se puede cambiar después desde "Editar producto"). Para mejores resultados, usa fotos cuadradas y con el producto centrado.</p>
+        <div id="preview-imagenes" class="preview-grid"></div>
 
         <label class="campo-checkbox">
             <input type="checkbox" name="destacado" <?= $destacado ? 'checked' : '' ?>>
@@ -224,17 +208,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </main>
 
-<script>
-function previsualizarImagen(input) {
-    const preview = document.getElementById('preview-imagen');
-    if (input.files && input.files[0]) {
-        preview.src = URL.createObjectURL(input.files[0]);
-        preview.style.display = 'block';
-    } else {
-        preview.style.display = 'none';
-    }
-}
-</script>
 <script src="../assets/js/admin.js"></script>
 </body>
 </html>

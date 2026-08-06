@@ -31,6 +31,7 @@ if (!$producto) {
 }
 
 $categorias = $mysqli->query('SELECT id, nombre FROM categorias WHERE activa = 1 ORDER BY orden')->fetch_all(MYSQLI_ASSOC);
+$imagenes = imagenes_producto($id);
 
 $errores = [];
 
@@ -42,7 +43,6 @@ $descripcion = $producto['descripcion'] ?? '';
 $precio = (string) $producto['precio'];
 $destacado = (bool) $producto['destacado'];
 $activo = (bool) $producto['activo'];
-$imagenActual = $producto['imagen'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_validar($_POST['csrf_token'] ?? null)) {
@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precioTexto = trim((string) ($_POST['precio'] ?? ''));
     $destacado = isset($_POST['destacado']);
     $activo = isset($_POST['activo']);
-    $borrarImagen = isset($_POST['borrar_imagen']);
     $precio = $precioTexto;
 
     if ($nombre === '' || mb_strlen($nombre) > 150) {
@@ -95,65 +94,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'El precio debe ser un número mayor o igual a 0.';
     }
 
-    $imagenValidada = false;
-    if (!empty($_FILES['imagen']['name'])) {
-        $resultado = validar_imagen($_FILES['imagen']);
-        if (!$resultado['ok']) {
-            $errores[] = $resultado['error'];
-        } else {
-            $imagenValidada = true;
-        }
-    }
-
     if ($errores === []) {
         $precioFinal = (float) $precioTexto;
         $marcaFinal = $marca !== '' ? $marca : null;
         $descripcionFinal = $descripcion !== '' ? $descripcion : null;
         $destacadoInt = $destacado ? 1 : 0;
         $activoInt = $activo ? 1 : 0;
+        $subcategoriaFinal = $subcategoriaId > 0 ? $subcategoriaId : null;
 
-        $nombreImagenFinal = $imagenActual;
+        $stmt = $mysqli->prepare(
+            'UPDATE productos
+             SET categoria_id = ?, subcategoria_id = ?, nombre = ?, marca = ?, descripcion = ?, precio = ?, destacado = ?, activo = ?
+             WHERE id = ?'
+        );
+        $stmt->bind_param(
+            'iisssdii',
+            $categoriaId,
+            $subcategoriaFinal,
+            $nombre,
+            $marcaFinal,
+            $descripcionFinal,
+            $precioFinal,
+            $destacadoInt,
+            $activoInt,
+            $id
+        );
+        $stmt->execute();
+        $stmt->close();
 
-        if ($imagenValidada) {
-            $nuevoArchivo = guardar_imagen($_FILES['imagen'], $id, $nombre);
-            if ($nuevoArchivo !== false) {
-                borrar_imagen($imagenActual);
-                $nombreImagenFinal = $nuevoArchivo;
-            } else {
-                $errores[] = 'No se pudo guardar la nueva imagen. El producto no se actualizó.';
-            }
-        } elseif ($borrarImagen) {
-            borrar_imagen($imagenActual);
-            $nombreImagenFinal = null;
+        $archivosImagenes = $_FILES['imagenes'] ?? ['name' => [], 'type' => [], 'tmp_name' => [], 'error' => [], 'size' => []];
+        $resultadoImagenes = guardar_imagenes_multiples($archivosImagenes, $id, $nombre);
+        foreach ($resultadoImagenes['errores'] as $errorImagen) {
+            flash_set('error', $errorImagen);
         }
 
-        if ($errores === []) {
-            $subcategoriaFinal = $subcategoriaId > 0 ? $subcategoriaId : null;
-            $stmt = $mysqli->prepare(
-                'UPDATE productos
-                 SET categoria_id = ?, subcategoria_id = ?, nombre = ?, marca = ?, descripcion = ?, precio = ?, imagen = ?, destacado = ?, activo = ?
-                 WHERE id = ?'
-            );
-            $stmt->bind_param(
-                'iisssdsiii',
-                $categoriaId,
-                $subcategoriaFinal,
-                $nombre,
-                $marcaFinal,
-                $descripcionFinal,
-                $precioFinal,
-                $nombreImagenFinal,
-                $destacadoInt,
-                $activoInt,
-                $id
-            );
-            $stmt->execute();
-            $stmt->close();
-
-            flash_set('exito', 'Producto actualizado ✓');
-            header('Location: productos.php');
-            exit;
-        }
+        flash_set('exito', 'Producto actualizado ✓');
+        header('Location: productos.php');
+        exit;
     }
 }
 ?>
@@ -231,21 +208,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="precio">Precio (₡) *</label>
         <input type="number" id="precio" name="precio" min="0" step="1" required value="<?= e($precio) ?>">
 
-        <?php $imagenSrc = producto_imagen_src($imagenActual); ?>
-        <?php if ($imagenSrc !== null): ?>
-            <label>Imagen actual</label>
-            <img class="imagen-actual" src="<?= e($imagenSrc) ?>" alt="<?= e($nombre) ?>">
-            <label class="campo-checkbox">
-                <input type="checkbox" name="borrar_imagen" value="1">
-                Eliminar imagen actual
-            </label>
-        <?php endif; ?>
+        <div class="fotos-actuales">
+            <h3>Fotos actuales (<?= count($imagenes) ?>/10)</h3>
 
-        <label for="imagen"><?= $imagenSrc !== null ? 'Reemplazar imagen' : 'Imagen' ?></label>
-        <input type="file" id="imagen" name="imagen" accept="image/jpeg,image/png,image/webp" onchange="previsualizarImagen(this)">
-        <p class="nota-campo">Máximo 3 MB. JPG, PNG o WEBP.</p>
-        <p class="hint-foto">Sugerencia: para mejores resultados, usa fotos cuadradas y con el producto centrado. Las fotos verticales u horizontales se recortarán automáticamente por los bordes.</p>
-        <img id="preview-imagen" class="preview-imagen" alt="Vista previa" style="display:none;">
+            <?php if (count($imagenes) === 0): ?>
+                <p class="hint-foto">Este producto todavía no tiene fotos.</p>
+            <?php else: ?>
+                <div class="fotos-grid">
+                    <?php foreach ($imagenes as $img): ?>
+                        <?php $fotoSrc = producto_imagen_src($img['archivo']); ?>
+                        <div class="foto-item <?= $img['es_principal'] ? 'es-principal' : '' ?>">
+                            <?php if ($img['es_principal']): ?>
+                                <span class="badge-principal">Principal</span>
+                            <?php endif; ?>
+                            <?php if ($fotoSrc !== null): ?>
+                                <img src="<?= e($fotoSrc) ?>" alt="Foto de <?= e($nombre) ?>">
+                            <?php endif; ?>
+
+                            <div class="foto-acciones">
+                                <?php if (!$img['es_principal']): ?>
+                                    <form method="post" action="foto_marcar_principal.php" class="form-inline">
+                                        <?= csrf_campo() ?>
+                                        <input type="hidden" name="imagen_id" value="<?= (int) $img['id'] ?>">
+                                        <input type="hidden" name="producto_id" value="<?= (int) $id ?>">
+                                        <button type="submit" class="btn-mini">Hacer principal</button>
+                                    </form>
+                                <?php endif; ?>
+
+                                <form method="post" action="foto_eliminar.php" class="form-inline" onsubmit="return confirm('¿Borrar esta foto?');">
+                                    <?= csrf_campo() ?>
+                                    <input type="hidden" name="imagen_id" value="<?= (int) $img['id'] ?>">
+                                    <input type="hidden" name="producto_id" value="<?= (int) $id ?>">
+                                    <button type="submit" class="btn-mini btn-peligro">Borrar</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if (count($imagenes) < 10): ?>
+            <label for="imagenes-input">Agregar más fotos (<?= 10 - count($imagenes) ?> restantes)</label>
+            <input type="file" id="imagenes-input" name="imagenes[]" multiple accept="image/jpeg,image/png,image/webp" data-sin-fotos="<?= count($imagenes) === 0 ? '1' : '0' ?>">
+            <p class="nota-campo">Máximo 3 MB por foto. JPG, PNG o WEBP.</p>
+            <div id="preview-imagenes" class="preview-grid"></div>
+        <?php else: ?>
+            <p class="hint-foto">Este producto ya tiene el máximo de 10 fotos. Borra alguna para poder agregar más.</p>
+        <?php endif; ?>
 
         <label class="campo-checkbox">
             <input type="checkbox" name="destacado" <?= $destacado ? 'checked' : '' ?>>
@@ -264,17 +274,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </main>
 
-<script>
-function previsualizarImagen(input) {
-    const preview = document.getElementById('preview-imagen');
-    if (input.files && input.files[0]) {
-        preview.src = URL.createObjectURL(input.files[0]);
-        preview.style.display = 'block';
-    } else {
-        preview.style.display = 'none';
-    }
-}
-</script>
 <script src="../assets/js/admin.js"></script>
 </body>
 </html>

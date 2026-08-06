@@ -11,7 +11,11 @@ $productos = [];
 if ($query !== '') {
     $termino = '%' . $query . '%';
     $stmt = $mysqli->prepare(
-        'SELECT p.*, c.slug AS cat_slug, c.nombre AS cat_nombre
+        'SELECT p.*, c.slug AS cat_slug, c.nombre AS cat_nombre,
+                (SELECT archivo FROM producto_imagenes
+                 WHERE producto_id = p.id
+                 ORDER BY es_principal DESC, orden ASC, id ASC
+                 LIMIT 1) AS imagen_principal
          FROM productos p
          JOIN categorias c ON p.categoria_id = c.id
          WHERE p.activo = 1

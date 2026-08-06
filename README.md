@@ -19,7 +19,7 @@ tienda-pesca/
 │   ├── db.php                 → conexión MySQLi
 │   ├── auth.php                → sesiones, login/logout, CSRF, requerir_login()
 │   ├── helpers.php             → e(), precio(), url_whatsapp(), slugify(), flash
-│   └── productos_helpers.php   → validar_imagen(), guardar_imagen(), borrar_imagen()
+│   └── productos_helpers.php   → validar_imagen(), borrar_imagen(), guardar_imagenes_multiples()
 ├── public/                    → DocumentRoot de Apache
 │   ├── .htaccess
 │   ├── index.php               → home pública (destacados)
@@ -134,6 +134,17 @@ Migraciones aplicadas hasta ahora:
   5=Accesorios, 6=Ofertas — verificar con
   `SELECT id, slug, nombre FROM categorias ORDER BY orden;` antes de
   correrla.
+- **`migracion_imagenes_multiples.sql`** — agrega la tabla
+  `producto_imagenes` (hasta 10 fotos por producto, con `es_principal` y
+  `orden`) y elimina la columna `productos.imagen` (una sola foto por
+  producto, reemplazada por la tabla nueva). **Destructiva**: borra todos
+  los productos existentes (`DELETE FROM productos`) — se asumió
+  intencional porque los productos en ese momento eran solo de prueba; si
+  tu base tiene productos reales, adaptá el script antes de correrlo.
+  Después de aplicarla, borrá a mano los archivos que queden huérfanos en
+  `public/assets/uploads/` (dejá solo `.gitkeep`, `.htaccess` y
+  `foto-portada.*` si existe — esa es la foto de portada del home, no una
+  foto de producto).
 
 ## Roadmap
 

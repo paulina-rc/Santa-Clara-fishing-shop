@@ -821,29 +821,124 @@ h1, h2, h3 {
     align-items: start;
 }
 
-.detalle-foto {
+.galeria {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.galeria-principal {
+    position: relative;
     aspect-ratio: 1 / 1;
-    border: 1px solid var(--linea);
     border-radius: 8px;
     overflow: hidden;
     background: var(--crema-2);
+    border: 1px solid var(--linea);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px;
+    user-select: none;
+    touch-action: pan-y;
 }
 
-.detalle-foto img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
+.galeria-vacia .tarjeta-producto-sin-foto {
+    font-size: 13px;
+}
+
+.galeria-foto {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    max-width: calc(100% - 48px);
+    max-height: calc(100% - 48px);
+    margin: auto;
     object-fit: contain;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+}
+
+.galeria-foto.activa {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.galeria-flecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(16, 40, 62, 0.8);
+    color: #fff;
+    border: 0;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 150ms ease;
+}
+
+.galeria-flecha:hover {
+    background: var(--marino);
+}
+
+.galeria-anterior { left: 12px; }
+.galeria-siguiente { right: 12px; }
+
+.galeria-contador {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(16, 40, 62, 0.8);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
+    z-index: 2;
+}
+
+.galeria-miniaturas {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.galeria-mini {
+    flex-shrink: 0;
+    width: 68px;
+    height: 68px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: var(--crema-2);
+    padding: 0;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+}
+
+.galeria-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
-.detalle-foto .tarjeta-producto-sin-foto {
-    font-size: 13px;
+.galeria-mini.activa {
+    border-color: var(--teal);
+}
+
+.galeria-mini:hover {
+    border-color: var(--marino);
 }
 
 .detalle-marca {
@@ -1347,6 +1442,17 @@ a.tarjeta-info:hover {
         grid-template-columns: 1fr;
         padding: 24px 20px;
         gap: 24px;
+    }
+
+    .galeria-flecha {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+
+    .galeria-mini {
+        width: 56px;
+        height: 56px;
     }
 
     .nosotros-historia {

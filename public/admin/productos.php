@@ -91,7 +91,11 @@ $offset = ($pagina - 1) * $porPagina;
 
 $stmt = $mysqli->prepare(
     'SELECT p.*, c.nombre AS cat_nombre, c.slug AS cat_slug,
-            s.nombre AS sub_nombre, s.slug AS sub_slug
+            s.nombre AS sub_nombre, s.slug AS sub_slug,
+            (SELECT archivo FROM producto_imagenes
+             WHERE producto_id = p.id
+             ORDER BY es_principal DESC, orden ASC, id ASC
+             LIMIT 1) AS imagen_principal
      FROM productos p
      JOIN categorias c ON p.categoria_id = c.id
      LEFT JOIN subcategorias s ON p.subcategoria_id = s.id
@@ -204,7 +208,7 @@ $categorias = $mysqli->query('SELECT id, nombre FROM categorias ORDER BY orden')
                 </thead>
                 <tbody>
                     <?php foreach ($productos as $producto): ?>
-                        <?php $imagenSrc = producto_imagen_src($producto['imagen']); ?>
+                        <?php $imagenSrc = producto_imagen_src($producto['imagen_principal']); ?>
                         <tr>
                             <td>
                                 <?php if ($imagenSrc !== null): ?>

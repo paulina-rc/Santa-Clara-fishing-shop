@@ -10,7 +10,14 @@ $meta_titulo = 'Tienda de Pesca Santa Clara · Cañas, carretes y señuelos en C
 $meta_descripcion = 'Catálogo de equipo de pesca en Santa Clara, San Carlos: cañas, carretes, señuelos, ropa y accesorios. Consultá disponibilidad por WhatsApp.';
 
 $stmtDestacados = $mysqli->prepare(
-    'SELECT * FROM productos WHERE activo = 1 AND destacado = 1 ORDER BY actualizado_en DESC LIMIT 8'
+    'SELECT p.*,
+            (SELECT archivo FROM producto_imagenes
+             WHERE producto_id = p.id
+             ORDER BY es_principal DESC, orden ASC, id ASC
+             LIMIT 1) AS imagen_principal
+     FROM productos p
+     WHERE p.activo = 1 AND p.destacado = 1
+     ORDER BY p.actualizado_en DESC LIMIT 8'
 );
 $stmtDestacados->execute();
 $destacados = $stmtDestacados->get_result()->fetch_all(MYSQLI_ASSOC);

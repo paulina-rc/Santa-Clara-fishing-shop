@@ -69,4 +69,40 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('subcategoria'),
         { incluirTodas: true }
     );
+
+    // Preview de fotos al elegirlas en el input multiple (nuevo / editar producto)
+    const inputImagenes = document.getElementById('imagenes-input');
+    const previewImagenes = document.getElementById('preview-imagenes');
+
+    if (inputImagenes && previewImagenes) {
+        const sinFotosPrevias = inputImagenes.dataset.sinFotos === '1';
+
+        inputImagenes.addEventListener('change', (e) => {
+            previewImagenes.innerHTML = '';
+            const archivos = Array.from(e.target.files);
+
+            if (archivos.length > 10) {
+                alert('Solo se pueden subir 10 imágenes a la vez. Se tomarán las primeras 10.');
+            }
+
+            archivos.slice(0, 10).forEach((archivo, idx) => {
+                if (!archivo.type.startsWith('image/')) {
+                    return;
+                }
+
+                const esPrincipal = idx === 0 && sinFotosPrevias;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `
+                        <img src="${ev.target.result}" alt="Preview">
+                        ${esPrincipal ? '<span class="badge-principal">Principal</span>' : ''}
+                    `;
+                    previewImagenes.appendChild(div);
+                };
+                reader.readAsDataURL(archivo);
+            });
+        });
+    }
 });

@@ -27,7 +27,7 @@ if (!$id) {
     exit;
 }
 
-$stmt = $mysqli->prepare('SELECT imagen FROM productos WHERE id = ? LIMIT 1');
+$stmt = $mysqli->prepare('SELECT id FROM productos WHERE id = ? LIMIT 1');
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $producto = $stmt->get_result()->fetch_assoc();
@@ -39,12 +39,20 @@ if (!$producto) {
     exit;
 }
 
+$stmtFotos = $mysqli->prepare('SELECT archivo FROM producto_imagenes WHERE producto_id = ?');
+$stmtFotos->bind_param('i', $id);
+$stmtFotos->execute();
+$archivosProducto = array_column($stmtFotos->get_result()->fetch_all(MYSQLI_ASSOC), 'archivo');
+$stmtFotos->close();
+
 $eliminar = $mysqli->prepare('DELETE FROM productos WHERE id = ?');
 $eliminar->bind_param('i', $id);
 $eliminar->execute();
 $eliminar->close();
 
-borrar_imagen($producto['imagen']);
+foreach ($archivosProducto as $archivo) {
+    borrar_imagen($archivo);
+}
 
 flash_set('exito', 'Producto eliminado ✓');
 header('Location: productos.php');

@@ -116,11 +116,56 @@ function producto_imagen_src(?string $imagen): ?string
 }
 
 /**
+ * Devuelve el archivo de la foto principal de un producto (la marcada
+ * es_principal, o la de menor orden si ninguna esta marcada), o null si
+ * el producto no tiene fotos.
+ */
+function imagen_principal_producto(int $producto_id): ?string
+{
+    global $mysqli;
+
+    $stmt = $mysqli->prepare(
+        'SELECT archivo FROM producto_imagenes
+         WHERE producto_id = ?
+         ORDER BY es_principal DESC, orden ASC, id ASC
+         LIMIT 1'
+    );
+    $stmt->bind_param('i', $producto_id);
+    $stmt->execute();
+    $fila = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $fila['archivo'] ?? null;
+}
+
+/**
+ * Devuelve todas las fotos de un producto en orden de despliegue
+ * (principal primero, luego por orden y id).
+ */
+function imagenes_producto(int $producto_id): array
+{
+    global $mysqli;
+
+    $stmt = $mysqli->prepare(
+        'SELECT id, archivo, es_principal, orden FROM producto_imagenes
+         WHERE producto_id = ?
+         ORDER BY es_principal DESC, orden ASC, id ASC'
+    );
+    $stmt->bind_param('i', $producto_id);
+    $stmt->execute();
+    $filas = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+
+    return $filas;
+}
+
+/**
  * Genera el HTML de una tarjeta de producto (usada en home, listado y detalle).
+ * Espera que la fila traiga la columna imagen_principal (via subquery en el SELECT).
  */
 function tarjeta_producto(array $producto): string
 {
-    $imagenSrc = producto_imagen_src($producto['imagen'] ?? null);
+    $imagenSrc = producto_imagen_src($producto['imagen_principal'] ?? null);
 
     if ($imagenSrc !== null) {
         $foto = '<img src="' . e($imagenSrc) . '" alt="' . e($producto['nombre']) . '" loading="lazy">';
