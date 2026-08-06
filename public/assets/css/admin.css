@@ -245,6 +245,12 @@ a {
     color: var(--marino);
 }
 
+.encabezado-seccion h3 {
+    margin: 0;
+    color: var(--marino);
+    font-size: 1.05rem;
+}
+
 .boton-dorado {
     background: var(--dorado);
     color: #fff;

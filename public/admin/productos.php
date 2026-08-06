@@ -30,6 +30,7 @@ function productos_url(array $overrides = []): string
 
 $busqueda = trim((string) ($_GET['q'] ?? ''));
 $categoriaId = (int) (filter_input(INPUT_GET, 'categoria', FILTER_VALIDATE_INT) ?: 0);
+$subcategoriaId = (int) (filter_input(INPUT_GET, 'subcategoria', FILTER_VALIDATE_INT) ?: 0);
 
 $estado = (string) ($_GET['estado'] ?? 'todos');
 if (!in_array($estado, ['todos', 'activos', 'ocultos'], true)) {
@@ -58,6 +59,12 @@ if ($categoriaId > 0) {
     $parametros[] = $categoriaId;
 }
 
+if ($subcategoriaId > 0) {
+    $condiciones[] = 'p.subcategoria_id = ?';
+    $tipos .= 'i';
+    $parametros[] = $subcategoriaId;
+}
+
 if ($estado === 'activos') {
     $condiciones[] = 'p.activo = 1';
 } elseif ($estado === 'ocultos') {
@@ -83,9 +90,11 @@ if ($pagina > $totalPaginas) {
 $offset = ($pagina - 1) * $porPagina;
 
 $stmt = $mysqli->prepare(
-    'SELECT p.*, c.nombre AS cat_nombre, c.slug AS cat_slug
+    'SELECT p.*, c.nombre AS cat_nombre, c.slug AS cat_slug,
+            s.nombre AS sub_nombre, s.slug AS sub_slug
      FROM productos p
      JOIN categorias c ON p.categoria_id = c.id
+     LEFT JOIN subcategorias s ON p.subcategoria_id = s.id
      WHERE 1=1' . $whereSql . '
      ORDER BY p.actualizado_en DESC
      LIMIT ? OFFSET ?'
@@ -123,6 +132,7 @@ $categorias = $mysqli->query('SELECT id, nombre FROM categorias ORDER BY orden')
     <nav class="nav-admin">
         <a href="index.php">Inicio</a>
         <a href="productos.php">Productos</a>
+        <a href="subcategorias.php">Subcategorías</a>
         <a href="cuenta.php">Mi cuenta</a>
         <a href="<?= e(BASE_URL) ?>/" target="_blank" rel="noopener">Ver sitio</a>
         <a href="logout.php">Cerrar sesión</a>
@@ -152,6 +162,13 @@ $categorias = $mysqli->query('SELECT id, nombre FROM categorias ORDER BY orden')
                         <?= e($categoria['nombre']) ?>
                     </option>
                 <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="campo-filtro">
+            <label for="subcategoria">Subcategoría</label>
+            <select id="subcategoria" name="subcategoria" data-actual="<?= $subcategoriaId ?>">
+                <option value="">Todas</option>
             </select>
         </div>
 
@@ -202,7 +219,11 @@ $categorias = $mysqli->query('SELECT id, nombre FROM categorias ORDER BY orden')
                                     <div class="celda-marca"><?= e($producto['marca']) ?></div>
                                 <?php endif; ?>
                             </td>
-                            <td><span class="badge badge-categoria"><?= e($producto['cat_nombre']) ?></span></td>
+                            <td>
+                                <span class="badge badge-categoria">
+                                    <?= e($producto['cat_nombre']) ?><?php if (!empty($producto['sub_nombre'])): ?> · <?= e($producto['sub_nombre']) ?><?php endif; ?>
+                                </span>
+                            </td>
                             <td><?= precio((float) $producto['precio']) ?></td>
                             <td>
                                 <span class="badge <?= $producto['activo'] ? 'badge-activo' : 'badge-oculto' ?>">
@@ -262,5 +283,6 @@ $categorias = $mysqli->query('SELECT id, nombre FROM categorias ORDER BY orden')
         <?php endif; ?>
     <?php endif; ?>
 </main>
+<script src="../assets/js/admin.js"></script>
 </body>
 </html>

@@ -44,6 +44,7 @@ $productosOcultos = (int) ($contadores['ocultos'] ?? 0);
     <nav class="nav-admin">
         <a href="index.php">Inicio</a>
         <a href="productos.php">Productos</a>
+        <a href="subcategorias.php">Subcategorías</a>
         <a href="cuenta.php">Mi cuenta</a>
         <a href="<?= e(BASE_URL) ?>/" target="_blank" rel="noopener">Ver sitio</a>
         <a href="logout.php">Cerrar sesión</a>

@@ -100,6 +100,41 @@ Para desplegar en un VPS de producción (VirtualHost completo, MySQL con
 usuario de permisos mínimos, permisos de archivos, HTTPS con Certbot,
 checklist post-despliegue), ver **[DEPLOY.md](DEPLOY.md)**.
 
+## Migraciones
+
+`sql/schema.sql` crea el esquema base. Los cambios posteriores a la
+estructura de la base de datos viven como scripts sueltos en `sql/`, con
+prefijo `migracion_`. Cada uno es idempotente donde es razonable (`CREATE
+TABLE IF NOT EXISTS`) pero **no se re-ejecuta solo** — hay que aplicarlo a
+mano una vez por entorno (local, staging, producción).
+
+Antes de correr cualquier migración:
+
+1. Revisa el script y confirma que los IDs o datos que asume (por ejemplo,
+   IDs de categorías existentes) coinciden con los de tu base. Si no
+   coinciden, ajusta el script antes de correrlo.
+2. Si la migración toca una tabla con datos reales, saca un respaldo:
+   ```bash
+   mysqldump -u <usuario> -p tienda_pesca > sql/backups/pre_<nombre>_$(date +%Y%m%d).sql
+   ```
+
+Para aplicar una migración, desde phpMyAdmin: abrir la base, pestaña
+**SQL**, pegar el contenido del archivo y ejecutar. Desde CLI:
+
+```bash
+mysql -u <usuario> -p tienda_pesca < sql/migracion_<nombre>.sql
+```
+
+Migraciones aplicadas hasta ahora:
+
+- **`migracion_subcategorias.sql`** — agrega la tabla `subcategorias`
+  (segundo nivel opcional dentro de cada categoría) y la columna
+  `productos.subcategoria_id` (nullable, `ON DELETE SET NULL`). Asume que
+  los IDs de `categorias` son 1=Cañas, 2=Carretes, 3=Señuelos, 4=Ropa,
+  5=Accesorios, 6=Ofertas — verificar con
+  `SELECT id, slug, nombre FROM categorias ORDER BY orden;` antes de
+  correrla.
+
 ## Roadmap
 
 - **Sprint 1:** base técnica — estructura de carpetas, conexión a base de

@@ -767,6 +767,36 @@ h1, h2, h3 {
     border-color: var(--marino);
 }
 
+.subcategorias-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.chip-sub {
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--linea);
+    background: var(--crema);
+    color: var(--marino);
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+.chip-sub:hover {
+    background: #fff;
+}
+
+.chip-sub.activo {
+    background: var(--marino);
+    color: #fff;
+    border-color: var(--marino);
+}
+
 /* --------------------------------------------------------------------
    Pagina de detalle (producto.php)
    -------------------------------------------------------------------- */

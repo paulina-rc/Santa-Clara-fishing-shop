@@ -10,9 +10,11 @@ $producto = null;
 
 if ($id !== null && $id !== false) {
     $stmt = $mysqli->prepare(
-        'SELECT p.*, c.slug AS cat_slug, c.nombre AS cat_nombre
+        'SELECT p.*, c.slug AS cat_slug, c.nombre AS cat_nombre,
+                s.slug AS sub_slug, s.nombre AS sub_nombre
          FROM productos p
          JOIN categorias c ON p.categoria_id = c.id
+         LEFT JOIN subcategorias s ON p.subcategoria_id = s.id
          WHERE p.id = ? AND p.activo = 1
          LIMIT 1'
     );
@@ -44,6 +46,8 @@ if (!$producto) {
 
 $imagenSrc = producto_imagen_src($producto['imagen']);
 $precioFormateado = precio((float) $producto['precio']);
+$urlCatalogoProducto = 'productos.php?cat=' . rawurlencode($producto['cat_slug'])
+    . (!empty($producto['sub_slug']) ? '&sub=' . rawurlencode($producto['sub_slug']) : '');
 
 $pagina_activa = 'catalogo';
 $meta_titulo = $producto['nombre'] . ' · Tienda de Pesca Santa Clara';
@@ -66,6 +70,9 @@ require __DIR__ . '/includes/header.php';
 <p class="migaja contenedor">
     <a href="index.php">Inicio</a> ›
     <a href="productos.php?cat=<?= e($producto['cat_slug']) ?>"><?= e($producto['cat_nombre']) ?></a> ›
+    <?php if (!empty($producto['sub_slug'])): ?>
+        <a href="<?= e($urlCatalogoProducto) ?>"><?= e($producto['sub_nombre']) ?></a> ›
+    <?php endif; ?>
     <?= e(recortar($producto['nombre'], 40)) ?>
 </p>
 
@@ -91,7 +98,7 @@ require __DIR__ . '/includes/header.php';
 
         <div class="detalle-botones">
             <a class="boton boton-dorado" href="<?= e(url_whatsapp('Hola, me gustaría consultar por el producto: ' . $producto['nombre'] . ' — ' . $precioFormateado . '. ¿Tienen disponible?')) ?>" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-            <a class="boton boton-ghost" href="productos.php?cat=<?= e($producto['cat_slug']) ?>">Ver más productos</a>
+            <a class="boton boton-ghost" href="<?= e($urlCatalogoProducto) ?>">Ver más productos</a>
         </div>
     </div>
 </section>

@@ -17,6 +17,7 @@ $errores = [];
 $nombre = '';
 $marca = '';
 $categoriaId = 0;
+$subcategoriaId = 0;
 $descripcion = '';
 $precio = '';
 $destacado = false;
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim((string) ($_POST['nombre'] ?? ''));
     $marca = trim((string) ($_POST['marca'] ?? ''));
     $categoriaId = (int) ($_POST['categoria_id'] ?? 0);
+    $subcategoriaId = (int) ($_POST['subcategoria_id'] ?? 0);
     $descripcion = trim((string) ($_POST['descripcion'] ?? ''));
     $precioTexto = trim((string) ($_POST['precio'] ?? ''));
     $destacado = isset($_POST['destacado']);
@@ -55,6 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'Selecciona una categoría válida.';
     }
 
+    if ($subcategoriaId > 0) {
+        $stmtSub = $mysqli->prepare('SELECT id FROM subcategorias WHERE id = ? AND categoria_id = ? LIMIT 1');
+        $stmtSub->bind_param('ii', $subcategoriaId, $categoriaId);
+        $stmtSub->execute();
+        $subcategoriaValida = $stmtSub->get_result()->fetch_assoc();
+        $stmtSub->close();
+
+        if (!$subcategoriaValida) {
+            $errores[] = 'La subcategoría elegida no corresponde a la categoría seleccionada.';
+        }
+    }
+
     if (!is_numeric($precioTexto) || (float) $precioTexto < 0) {
         $errores[] = 'El precio debe ser un número mayor o igual a 0.';
     }
@@ -72,16 +86,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($errores === []) {
         $precioFinal = (float) $precioTexto;
         $stmt = $mysqli->prepare(
-            'INSERT INTO productos (categoria_id, nombre, marca, descripcion, precio, destacado, activo)
-             VALUES (?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO productos (categoria_id, subcategoria_id, nombre, marca, descripcion, precio, destacado, activo)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         );
+        $subcategoriaFinal = $subcategoriaId > 0 ? $subcategoriaId : null;
         $marcaFinal = $marca !== '' ? $marca : null;
         $descripcionFinal = $descripcion !== '' ? $descripcion : null;
         $destacadoInt = $destacado ? 1 : 0;
         $activoInt = $activo ? 1 : 0;
         $stmt->bind_param(
-            'issdsii',
+            'iisssdii',
             $categoriaId,
+            $subcategoriaFinal,
             $nombre,
             $marcaFinal,
             $descripcionFinal,
@@ -135,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="nav-admin">
         <a href="index.php">Inicio</a>
         <a href="productos.php">Productos</a>
+        <a href="subcategorias.php">Subcategorías</a>
         <a href="cuenta.php">Mi cuenta</a>
         <a href="<?= e(BASE_URL) ?>/" target="_blank" rel="noopener">Ver sitio</a>
         <a href="logout.php">Cerrar sesión</a>
@@ -163,14 +180,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="marca">Marca</label>
         <input type="text" id="marca" name="marca" maxlength="80" value="<?= e($marca) ?>">
 
-        <label for="categoria_id">Categoría *</label>
-        <select id="categoria_id" name="categoria_id" required>
+        <label for="categoria-select">Categoría *</label>
+        <select id="categoria-select" name="categoria_id" required>
             <option value="">Selecciona una categoría</option>
             <?php foreach ($categorias as $categoria): ?>
                 <option value="<?= (int) $categoria['id'] ?>" <?= $categoriaId === (int) $categoria['id'] ? 'selected' : '' ?>>
                     <?= e($categoria['nombre']) ?>
                 </option>
             <?php endforeach; ?>
+        </select>
+
+        <label for="subcategoria-select">Subcategoría (opcional)</label>
+        <select id="subcategoria-select" name="subcategoria_id" data-actual="<?= $subcategoriaId ?>">
+            <option value="">— Sin subcategoría —</option>
         </select>
 
         <label for="descripcion">Descripción</label>
@@ -213,5 +235,6 @@ function previsualizarImagen(input) {
     }
 }
 </script>
+<script src="../assets/js/admin.js"></script>
 </body>
 </html>
