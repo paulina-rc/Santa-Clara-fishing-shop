@@ -24,7 +24,7 @@ define('WHATSAPP_NUMERO', '50688275387');   // formato internacional, solo digit
 define('WHATSAPP_DISPLAY', '8827-5387');    // formato para mostrar en pantalla
 // define('INSTAGRAM_USUARIO', 'tiendapescasantaclara'); // sin cuenta actual
 define('TIKTOK_USUARIO', 'tienda.de.pesca');
-define('FACEBOOK_URL', 'https://www.facebook.com/search/top?q=tienda%20de%20pesca%20santa%20clara');
+define('FACEBOOK_URL', 'https://www.facebook.com/share/198cm48Bwj/?mibextid=wwXIfr');
 define('EMAIL_CONTACTO', 'contacto@tiendapescasantaclara.com');
 define('DIRECCION', '500 metros de la plaza de deportes Santa Clara, Quesada, Costa Rica');
 define('MAPS_URL', 'https://maps.app.goo.gl/LUt8kJrw9ahSnZev9');

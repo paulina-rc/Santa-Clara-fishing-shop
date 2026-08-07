@@ -138,12 +138,9 @@ require __DIR__ . '/includes/header.php';
             </div>
         </div>
 
-        <!-- TODO: Reemplazar src del iframe con el embed exacto de Google Maps.
-             Ir a maps.google.com → buscar "500m plaza deportes Santa Clara Quesada"
-             → Compartir → Incorporar un mapa → copiar src del iframe -->
         <div class="contacto-mapa">
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15723.842!2d-84.5253!3d10.3271!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSanta%20Clara%2C%20Quesada%2C%20Costa%20Rica!5e0!3m2!1ses!2scr!4v1700000000"
+                src="https://www.google.com/maps?q=Tienda+de+Pesca+Santa+Clara+Quesada+Costa+Rica&output=embed"
                 width="100%"
                 height="100%"
                 style="border:0;"
