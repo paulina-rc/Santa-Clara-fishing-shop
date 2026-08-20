@@ -72,5 +72,4 @@ categorias ──< subcategorias
 **Paulina Rojas** — [@paulina-rc](https://github.com/paulina-rc)
 
 ## License
-
-MIT License. See [LICENSE](LICENSE) for details.
+License. See [LICENSE](LICENSE) for details.
