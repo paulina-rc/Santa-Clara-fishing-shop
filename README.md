@@ -1,199 +1,76 @@
-# Santa Clara Fishing Shop 
+# Tienda de Pesca Santa Clara
 
-Catalog site with private admin panel.
-**Stack:** PHP 8+, MySQL 8+, HTML, CSS, JavaScript.
-**Architecture:** Structured vanilla PHP (no framework), object-oriented MySQLi.
+Sitio de catálogo con panel administrativo privado para una tienda de equipo de pesca deportiva en Santa Clara, San Carlos, Costa Rica.
 
-The public-facing site is in Spanish — this README documents the codebase for developers.
+
+**Sitio en producción:** [tiendapescasantaclara.com](https://tiendapescasantaclara.com)
+**Diseño y desarrollo:** PR.DEV
 
 ---
 
-## Project structure
+## Estructura
 
 ```
-tienda-pesca/
+Santa-Clara-fishing-shop/
 ├── config/
-│   ├── config.example.php     → copy to config.php on the server
-│   └── config.php             → NOT committed (credentials)
-├── includes/
-│   ├── db.php                 → conexión MySQLi
-│   ├── auth.php                → sesiones, login/logout, CSRF, requerir_login()
-│   ├── helpers.php             → e(), precio(), url_whatsapp(), slugify(), flash
-│   └── productos_helpers.php   → validar_imagen(), borrar_imagen(), guardar_imagenes_multiples()
-├── public/                    → DocumentRoot de Apache
+│   ├── config.example.php        → plantilla; copiar a config.php
+│   └── config.php                → NO versionado (credenciales)
+├── includes/                     → fuera del DocumentRoot
+│   ├── db.php                    → conexión MySQLi ($mysqli)
+│   ├── auth.php                  → sesiones, login/logout, CSRF, requerir_login()
+│   ├── helpers.php               → e(), precio(), slugify(), url_whatsapp(), flash,
+│   │                               tarjeta_producto(), imágenes de producto
+│   └── productos_helpers.php     → validar_imagen(), borrar_imagen(),
+│                                   guardar_imagenes_multiples()
+├── public/                       → DocumentRoot de Apache
 │   ├── .htaccess
-│   ├── index.php               → home pública (destacados)
-│   ├── productos.php           → listado público por categoría
-│   ├── producto.php            → ficha pública de producto
+│   ├── index.php                 → home (destacados)
+│   ├── productos.php             → listado por categoría/subcategoría
+│   ├── producto.php              → ficha de producto
+│   ├── buscar.php                → buscador
+│   ├── nosotros.php              → historia y contacto
 │   ├── includes/
-│   │   ├── header.php          → partial: nav pública, meta tags
-│   │   └── footer.php          → partial: footer, WhatsApp/Instagram
+│   │   ├── header.php            → nav, meta tags, favicons
+│   │   └── footer.php            → footer, WhatsApp / redes
 │   ├── admin/
-│   │   ├── login.php
-│   │   ├── logout.php
-│   │   ├── index.php            → dashboard con contadores
-│   │   ├── cuenta.php            → cambio de contraseña del admin
-│   │   ├── productos.php        → listado admin (filtros, acciones rápidas)
-│   │   ├── producto_nuevo.php   → formulario de alta
-│   │   ├── producto_editar.php  → formulario de edición (?id=)
-│   │   ├── producto_eliminar.php → endpoint POST, borra producto + imagen
-│   │   └── producto_toggle.php  → endpoint POST, toggle activo/destacado
+│   │   ├── login.php · logout.php · index.php · cuenta.php
+│   │   ├── productos.php         → listado con filtros y paginación
+│   │   ├── producto_nuevo.php · producto_editar.php
+│   │   ├── producto_eliminar.php · producto_toggle.php   → endpoints POST
+│   │   ├── foto_eliminar.php · foto_marcar_principal.php → endpoints POST
+│   │   ├── subcategorias.php · subcategoria_nueva.php
+│   │   ├── subcategoria_editar.php · subcategoria_eliminar.php
+│   │   ├── subcategoria_toggle.php
+│   │   └── subcategorias_json.php → subcategorías por categoría (para el form)
 │   └── assets/
-│       ├── css/
-│       │   ├── admin.css       → estilos del panel admin
-│       │   └── publico.css     → estilos del sitio público
-│       ├── js/
-│       ├── img/
-│       └── uploads/            → imágenes de productos (writable, sin PHP)
+│       ├── css/  → admin.css, publico.css
+│       ├── js/   → admin.js, publico.js
+│       ├── img/  → logo, favicons, fotos del sitio
+│       └── uploads/ → fotos de productos (escribible, sin ejecución de PHP)
 ├── sql/
 │   ├── schema.sql
-│   └── crear_admin.php        → script de un solo uso
-├── .gitignore
-├── DEPLOY.md                  → guía de despliegue en VPS (Apache, MySQL, SSL)
+│   ├── migracion_subcategorias.sql
+│   ├── migracion_imagenes_multiples.sql
+│   └── crear_admin.php           → script de un solo uso
+├── DEPLOY.md                     → guía de despliegue en VPS
 └── README.md
 ```
 
-## Desarrollo local — inicio rápido
+### Modelo de datos
 
-### 1. Crear base de datos y cargar el esquema
-
-```sql
-CREATE DATABASE tienda_pesca CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'tp_user'@'localhost' IDENTIFIED BY 'a-strong-password';
-GRANT ALL PRIVILEGES ON tienda_pesca.* TO 'tp_user'@'localhost';
-FLUSH PRIVILEGES;
+```
+categorias ──< subcategorias
+     │              │
+     └──────< productos >──── producto_imagenes
+                 │
+              admins (independiente)
 ```
 
-```bash
-mysql -u tp_user -p tienda_pesca < sql/schema.sql
-```
 
-### 2. Configurar
+## Author
 
-```bash
-cp config/config.example.php config/config.php
-# editar config/config.php con las credenciales locales y BASE_URL
-```
+**Paulina Rojas** — [@paulina-rc](https://github.com/paulina-rc)
 
-### 3. Permisos de uploads
+## License
 
-```bash
-chmod 775 public/assets/uploads
-```
-
-### 4. Crear el admin inicial
-
-Edita `sql/crear_admin.php` con el usuario/contraseña deseados, ejecútalo y
-bórralo:
-
-```bash
-php sql/crear_admin.php
-rm sql/crear_admin.php
-```
-
-### 5. Servidor
-
-Apunta el DocumentRoot de Apache (o el servidor embebido de PHP) a
-`public/`. Módulos requeridos: `mod_rewrite`, `mod_headers`, `mod_expires`.
-
-Para desplegar en un VPS de producción (VirtualHost completo, MySQL con
-usuario de permisos mínimos, permisos de archivos, HTTPS con Certbot,
-checklist post-despliegue), ver **[DEPLOY.md](DEPLOY.md)**.
-
-## Migraciones
-
-`sql/schema.sql` crea el esquema base. Los cambios posteriores a la
-estructura de la base de datos viven como scripts sueltos en `sql/`, con
-prefijo `migracion_`. Cada uno es idempotente donde es razonable (`CREATE
-TABLE IF NOT EXISTS`) pero **no se re-ejecuta solo** — hay que aplicarlo a
-mano una vez por entorno (local, staging, producción).
-
-Antes de correr cualquier migración:
-
-1. Revisa el script y confirma que los IDs o datos que asume (por ejemplo,
-   IDs de categorías existentes) coinciden con los de tu base. Si no
-   coinciden, ajusta el script antes de correrlo.
-2. Si la migración toca una tabla con datos reales, saca un respaldo:
-   ```bash
-   mysqldump -u <usuario> -p tienda_pesca > sql/backups/pre_<nombre>_$(date +%Y%m%d).sql
-   ```
-
-Para aplicar una migración, desde phpMyAdmin: abrir la base, pestaña
-**SQL**, pegar el contenido del archivo y ejecutar. Desde CLI:
-
-```bash
-mysql -u <usuario> -p tienda_pesca < sql/migracion_<nombre>.sql
-```
-
-Migraciones aplicadas hasta ahora:
-
-- **`migracion_subcategorias.sql`** — agrega la tabla `subcategorias`
-  (segundo nivel opcional dentro de cada categoría) y la columna
-  `productos.subcategoria_id` (nullable, `ON DELETE SET NULL`). Asume que
-  los IDs de `categorias` son 1=Cañas, 2=Carretes, 3=Señuelos, 4=Ropa,
-  5=Accesorios, 6=Ofertas — verificar con
-  `SELECT id, slug, nombre FROM categorias ORDER BY orden;` antes de
-  correrla.
-- **`migracion_imagenes_multiples.sql`** — agrega la tabla
-  `producto_imagenes` (hasta 10 fotos por producto, con `es_principal` y
-  `orden`) y elimina la columna `productos.imagen` (una sola foto por
-  producto, reemplazada por la tabla nueva). **Destructiva**: borra todos
-  los productos existentes (`DELETE FROM productos`) — se asumió
-  intencional porque los productos en ese momento eran solo de prueba; si
-  tu base tiene productos reales, adaptá el script antes de correrlo.
-  Después de aplicarla, borrá a mano los archivos que queden huérfanos en
-  `public/assets/uploads/` (dejá solo `.gitkeep`, `.htaccess` y
-  `foto-portada.*` si existe — esa es la foto de portada del home, no una
-  foto de producto).
-
-## Roadmap
-
-- **Sprint 1:** base técnica — estructura de carpetas, conexión a base de
-  datos, esquema SQL, autenticación de admin con CSRF y sesiones seguras,
-  dashboard con contadores, seguridad de servidor (.htaccess, cabeceras,
-  protección de uploads).
-- **Sprint 2:** diseño público del catálogo — home, listado por categoría,
-  ficha de producto, integración de WhatsApp/Instagram.
-- **Sprint 3 (este sprint):** CRUD de productos en el admin — listado con
-  filtros y paginación, alta y edición con subida/validación de imágenes
-  (MIME real, no extensión declarada), toggle rápido de activo/destacado,
-  eliminación con confirmación, cambio de contraseña del admin, y guía de
-  despliegue (`DEPLOY.md`).
-
-## Generar favicons a partir del logo
-
-El logo fuente vive en `public/assets/img/logo.png`. El sitio espera además
-estos archivos en la misma carpeta (`public/assets/img/`) para mostrar el
-ícono en la pestaña del navegador:
-
-- `favicon.ico`
-- `favicon-16x16.png`
-- `favicon-32x32.png`
-- `apple-touch-icon.png`
-
-**Opción rápida (recomendada):**
-
-1. Ir a https://realfavicongenerator.net
-2. Subir `logo.png`
-3. Descargar el ZIP y extraer esos 4 archivos en `public/assets/img/`
-
-**Opción manual con ImageMagick** (si está instalado):
-
-```bash
-cd public/assets/img
-magick logo.png -resize 32x32 favicon-32x32.png
-magick logo.png -resize 16x16 favicon-16x16.png
-magick logo.png -resize 180x180 apple-touch-icon.png
-magick logo.png -define icon:auto-resize=16,32,48 favicon.ico
-```
-
-Mientras estos archivos no existan, el sitio sigue funcionando con normalidad
-(el navegador simplemente no muestra un ícono personalizado en la pestaña).
-
-## Validación
-
-Todos los archivos PHP deben pasar sin errores de sintaxis:
-
-```bash
-find . -name "*.php" -print0 | xargs -0 -n1 php -l
-```
+MIT License. See [LICENSE](LICENSE) for details.
